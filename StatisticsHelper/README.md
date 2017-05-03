@@ -21,6 +21,6 @@ License
 
 Copyright (c) 2017 Pirmin Schmid, [MIT license][license].
 
-[link]:utils
-[license]:https://github.com/pirminschmid/CppToolbox/StatisticsHelper/tree/master/LICENSE
-[feedback]:mailto:mailbox@pirmin-schmid.ch?subject=CppToolbox
+[link]:src/StatisticsHelperDemo/utils
+[license]:LICENSE
+[feedback]:mailto:mailbox@pirmin-schmid.ch?subject=StatisticsHelper

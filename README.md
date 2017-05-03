@@ -21,5 +21,5 @@ Copyright (c) 2017 Pirmin Schmid, [MIT license][license].
 [luawrapper]:LuaWrapper
 [statisticshelper]:StatisticsHelper
 [lua]:https://www.lua.org
-[license]:https://github.com/pirminschmid/CppToolbox/tree/master/LICENSE
+[license]:LICENSE
 [feedback]:mailto:mailbox@pirmin-schmid.ch?subject=CppToolbox

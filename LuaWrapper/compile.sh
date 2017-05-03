@@ -24,7 +24,7 @@ rm -rf $target_path/* 2>/dev/null
 mkdir -p $build_path
 rm -r $build_path/* 2>/dev/null
 mkdir -p $LUA_INCLUDE_PATH
-rm -r $LUA_INCLUDE_PATH/* 2>/dev/null
+# no rm within the source code region (safety)
 #
 echo "compilation of Lua from $lua_source_path to $LUA_TARGET_PATH"
 cp -r $lua_source_path $LUA_TARGET_PATH

@@ -17,7 +17,6 @@ mv $lua_name lua
 cd lua
 mv Makefile Makefile_original
 sed -e "s/\/usr\/local/\$(LUA_TARGET_PATH)/g" Makefile_original > Makefile
-echo "$1"
 if [ "$1" = "mac" ]; then
     make macosx test
 else

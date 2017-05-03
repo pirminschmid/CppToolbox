@@ -28,5 +28,5 @@ Copyright (c) 2017 Pirmin Schmid, [MIT license][license].
 [lua]:https://www.lua.org
 [luajit]:http://luajit.org
 [link]:src/SampleProject/utils
-[license]:https://github.com/pirminschmid/CppToolbox/LuaWrapper/tree/master/LICENSE
+[license]:LICENSE
 [feedback]:mailto:mailbox@pirmin-schmid.ch?subject=LuaWrapper

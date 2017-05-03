@@ -3,7 +3,7 @@
 # including compilation of lua
 # depends on lua being installed before using the install_lua.sh script
 current_path=$(pwd)
-code_source_path=$current_path
+code_source_path=$current_path/src/StatisticsHelperDemo
 target_path=$current_path/bin
 build_path=$target_path/build
 #
