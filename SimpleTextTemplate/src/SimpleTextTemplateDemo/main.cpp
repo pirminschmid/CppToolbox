@@ -31,7 +31,7 @@ int main() {
 	cout << endl << "***** after substitution *****" << endl;
 	t1.print(&cout);
 
-	TextTemplate t2(TextTemplate::kDollarStyle);
+	TextTemplate t2(TextTemplate::kDollarSignStyle);
 	t2.readFile("template2.txt");
 	cout << "***** Style kDollarStyle: before *****" << endl;
 	t2.print(&cout);

@@ -64,7 +64,7 @@ namespace toolbox {
 			case kDoubleBracketsStyle:
 				substituteWith_DoubleBracketsStyle(substitutions);
 				break;
-			case kDollarStyle:
+			case kDollarSignStyle:
 				substituteWith_PythonDollarStyle(substitutions);
 				break;
 		}

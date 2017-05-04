@@ -43,6 +43,8 @@ namespace toolbox {
 
 		//--- import/export ----------------------------------------------------
 
+		void extendMap(const std::unordered_map<std::string, std::string> &map);
+
 		void fromString(const std::string &str,
 						const std::string &delimiter = ";",
 						const std::string &binder = "=");
@@ -61,7 +63,7 @@ namespace toolbox {
 
 		//--- access -----------------------------------------------------------
 
-		std::string getString(const std::string &key, error_message_handler_type emh = emDoNothing);
+		std::string getString(const std::string &key, error_message_handler_type emh = emDoNothing) const;
 
 		void setString(const std::string &key, const std::string &value);
 
@@ -69,7 +71,7 @@ namespace toolbox {
 						 double min = std::numeric_limits<double>::min(),
 						 double max = std::numeric_limits<double>::max(),
 						 double default_value = 0.0,
-						 error_message_handler_type emh = emDoNothing);
+						 error_message_handler_type emh = emDoNothing) const;
 
 		void setDouble(const std::string &key, double value);
 
@@ -78,7 +80,7 @@ namespace toolbox {
 				 T min = std::numeric_limits<T>::min(),
 				 T max = std::numeric_limits<T>::max(),
 				 T default_value = 0,
-				 error_message_handler_type emh = emDoNothing) {
+				 error_message_handler_type emh = emDoNothing) const {
 
 			auto it = store_.find(key);
 			if (it == store_.end()) {
@@ -103,7 +105,7 @@ namespace toolbox {
 		}
 
 		template <typename T>
-		T setInt(const std::string &key, T value) {
+		void setInt(const std::string &key, T value) {
 			store_[key] = std::to_string(value);
 		}
 

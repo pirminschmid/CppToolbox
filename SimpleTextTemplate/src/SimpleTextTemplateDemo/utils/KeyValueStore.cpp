@@ -22,6 +22,12 @@ namespace toolbox {
 
 	//--- import/export ----------------------------------------------------
 
+	void KeyValueStore::extendMap(const std::unordered_map<std::string, std::string> &map) {
+		for (const auto &item : map) {
+			store_[item.first] = item.second;
+		}
+	}
+
 	void KeyValueStore::fromString(const std::string &str,
 								   const std::string &delimiter,
 								   const std::string &binder) {
@@ -82,8 +88,14 @@ namespace toolbox {
 
 	//--- access -----------------------------------------------------------
 
-	std::string KeyValueStore::getString(const std::string &key, KeyValueStore::error_message_handler_type emh) {
-		return std::string();
+	std::string KeyValueStore::getString(const std::string &key, KeyValueStore::error_message_handler_type emh) const {
+		auto it = store_.find(key);
+		if (it == store_.end()) {
+			emh("key '" + key + "'not found");
+			return "";
+		}
+
+		return it->second;
 	}
 
 	void KeyValueStore::setString(const std::string &key, const std::string &value) {
@@ -91,7 +103,7 @@ namespace toolbox {
 	}
 
 	double KeyValueStore::getDouble(const std::string &key, double min, double max, double default_value,
-									KeyValueStore::error_message_handler_type emh) {
+									KeyValueStore::error_message_handler_type emh) const {
 		auto it = store_.find(key);
 		if (it == store_.end()) {
 			emh("key '" + key + "'not found");

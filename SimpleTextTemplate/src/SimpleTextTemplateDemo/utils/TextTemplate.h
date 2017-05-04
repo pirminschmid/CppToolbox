@@ -18,7 +18,7 @@ namespace toolbox {
 	 * - double_brackets_style: variable var is encapsulated in {{var}}, no exceptions
 	 *   this is the preferred / default style, since it is simpler and faster
 	 *
-	 * - dollar_style: follows the rules as defined by string.Template() in Python (from Python documentation)
+	 * - dollar_sign_style: follows the rules as defined by string.Template() in Python (from Python documentation)
 	 *   - $$ is an escape; it is replaced with a single $.
 	 *   - $identifier names a substitution placeholder matching a mapping key of "identifier".
 	 *   - ${identifier} is equivalent to $identifier. It is required when valid identifier characters
@@ -44,7 +44,7 @@ namespace toolbox {
 	public:
 		enum Style {
 			kDoubleBracketsStyle,
-			kDollarStyle
+			kDollarSignStyle
 		};
 
 		TextTemplate(const Style style = kDefaultStyle);
