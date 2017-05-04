@@ -1,0 +1,24 @@
+{{intro}}
+
+Tu ne quaesieris, scire nefas, quem mihi, quem tibi
+Finem di dederint, Leuconoe, nec Babylonios
+Temptaris numeros. Ut melius quidquid erit pati,
+Seu pluris hiemes seu tribuit Iuppiter ultimam,
+Quae nunc oppositis debilitat pumicibus mare
+Tyrrhenum: sapias, vina liques, et spatio brevi
+Spem longam reseces. Dum loquimur, fugerit invida
+Aetas: {{what}}, quam minimum credula postero.
+
+{{author1}}, Carmina
+from: https://la.wikisource.org/wiki/Carmina_(Horatius)/Liber_I/Carmen_XI
+
+
+Then how, unharm'd, he pass'd the Syren-coasts,
+The justling rocks where fierce Charybdis raves,
+And howling Scylla whirls her thunderous waves,
+
+{{author2}}, The Odyssey, translated by Alexander Pope
+from: http://www.gutenberg.org/cache/epub/3160/pg3160.txt
+
+
+{{outro}}
