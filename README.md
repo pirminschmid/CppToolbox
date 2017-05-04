@@ -4,7 +4,7 @@ CppToolbox
 A collection of various C++ helper classes. They are written for C++14. Cmake is used for compilation.
 See the documentation of each class for additional information.
 
-- [LinkedMap][linkedmap]: An implementation of a std::unordered_map, with the additional feature of keeping insertion/refresh order.
+- [LinkedMap][linkedmap]: An implementation of a std::unordered_map, additionally keeping insertion/refresh order.
 
 - [LuaWrapper][luawrapper]: A simple C++ wrapper class for the [Lua][lua] interpreter.
 
