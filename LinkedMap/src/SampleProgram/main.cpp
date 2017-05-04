@@ -45,7 +45,8 @@ int main(int argc, char *argv[]) {
 	cout << endl << "Adding 15 elements 0-14; even numbered datasets are labeled 'keepers' and will not be replaced ";
 	for (int i = 0; i < 15; ++i) {
 		unique_ptr<Dataset> d = make_unique<Dataset>(i, i % 2 == 0);
-		lm.add(d->getName(), move(d));
+		string key(d->getName());
+		lm.add(key, move(d));
 	}
 	lm.printList(&cout);
 
@@ -59,9 +60,11 @@ int main(int argc, char *argv[]) {
 		unique_ptr<Dataset> d = make_unique<Dataset>(i, false);
 		lm_type::ID_type id = lm.findFirstWithPredicate(predicate, false, 1);
 		if (id == lm_type::kNone) {
-			lm.add(d->getName(), move(d));
+			string key(d->getName());
+			lm.add(key, move(d));
 		} else {
-			lm.replace(id, d->getName(), move(d));
+			string key(d->getName());
+			lm.replace(id, key, move(d));
 		}
 	}
 	lm.printList(&cout);

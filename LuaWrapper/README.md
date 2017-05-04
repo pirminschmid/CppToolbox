@@ -6,6 +6,14 @@ A simple C++ wrapper class for the [Lua][lua] interpreter. This allows an easy c
 Current version v1.0 (2017-05-01).  [Feedback][feedback] welcome.
 
 
+Dependencies
+------------
+
+- Needs ```readline``` and ```readline-devel``` packages installed on Linux 
+
+- Lua is installed automatically with the ```./install_lua.sh``` script
+
+
 Usage
 -----
 
