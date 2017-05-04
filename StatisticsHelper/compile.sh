@@ -1,7 +1,5 @@
 #!/bin/bash
-# builds a C++ sample project that uses an embedded Lua interpreter
-# including compilation of lua
-# depends on lua being installed before using the install_lua.sh script
+# builds a C++ sample project
 current_path=$(pwd)
 code_source_path=$current_path/src/StatisticsHelperDemo
 target_path=$current_path/bin
