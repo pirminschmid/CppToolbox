@@ -2,6 +2,7 @@ CppToolbox
 ==========
 
 A collection of various C++ helper classes. They are written for C++14. Cmake is used for compilation.
+The code has been tested on macOS (Xcode Clang 8.1) and Linux (Fedora, gcc 6.3).
 See the documentation of each class for additional information.
 
 - [FileSystemHelper][filesystemhelper]: A few helper functions for using the filesystem.
