@@ -5,6 +5,7 @@
 #include "FileSystemHelper.h"
 
 #include <dirent.h>
+#include <libgen.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -98,5 +99,27 @@ namespace toolbox {
 
 	void FileSystemHelper::rmFile(const std::string &path) {
 		std::remove(path.c_str());
+	}
+
+	std::string FileSystemHelper::getBasename(const std::string &path) {
+		// note basename may modify the string -> create a copy first
+		std::string p(path);
+		// and remove const modifier
+		char *b = basename( (char *)p.c_str() );
+		if (b == nullptr) {
+			return std::string("");
+		}
+		return std::string(b);
+	}
+
+	std::string FileSystemHelper::getDirname(const std::string &path) {
+		// note basename may modify the string -> create a copy first
+		std::string p(path);
+		// and remove const modifier
+		char *b = dirname( (char *)p.c_str() );
+		if (b == nullptr) {
+			return std::string("");
+		}
+		return std::string(b);
 	}
 }

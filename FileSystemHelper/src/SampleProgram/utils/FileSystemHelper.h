@@ -63,6 +63,17 @@ namespace toolbox {
 		static void rmFile(const std::string &path);
 
 
+		/**
+		 * @return file basename of path
+		 */
+		static std::string getBasename(const std::string &path);
+
+
+		/**
+ 		 * @return folder part of path
+ 		 */
+		static std::string getDirname(const std::string &path);
+
 	private:
 		static void readDirRecursive(const std::string &path,
 							handle_file_type callback,
