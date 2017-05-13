@@ -1,11 +1,17 @@
+/*------------------------------------------------------------------------------
+ * CppToolbox: LuaWrapper
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
+
 /**
  * Sample program for LuaWrapper.
- *
  */
 
 #include <iostream>
 
-#include "utils/LuaWrapper.h"
+#include "toolbox/LuaWrapper.h"
 
 using namespace std;
 using namespace lua;

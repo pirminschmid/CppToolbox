@@ -1,13 +1,16 @@
-//
-// Created by Pirmin Schmid on 23.04.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: StatisticsHelper
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
 #include <cmath>
 #include <iostream>
 #include <iomanip>
 #include <vector>
 
-#include "utils/StatisticsHelper.h"
+#include "toolbox/StatisticsHelper.h"
 
 using namespace std;
 using namespace toolbox;

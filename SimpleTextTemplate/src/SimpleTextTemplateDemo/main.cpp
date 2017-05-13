@@ -1,11 +1,14 @@
-//
-// Created by Pirmin Schmid on 03.05.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: TextTemplate
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
 #include <iostream>
 
-#include "utils/TextTemplate.h"
-#include "utils/KeyValueStore.h"
+#include "toolbox/KeyValueStore.h"
+#include "toolbox/TextTemplate.h"
 
 using namespace std;
 using namespace toolbox;

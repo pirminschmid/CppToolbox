@@ -11,9 +11,9 @@ link_directories($ENV{LUA_LIB_PATH})
 
 set(LUA_INCLUDES lua/lua.hpp lua/lua.h lua/lualib.h lua/lauxlib.h lua/luaconf.h)
 
-set(UTILS utils/LuaWrapper.cpp utils/LuaWrapper.h ${LUA_INCLUDES})
+set(TOOLBOX toolbox/LuaWrapper.cpp toolbox/LuaWrapper.h ${LUA_INCLUDES})
 
-set(SOURCE_FILES main.cpp ${LUA_INCLUDES} ${UTILS})
+set(SOURCE_FILES main.cpp ${LUA_INCLUDES} ${TOOLBOX})
 add_executable(sample_project ${SOURCE_FILES})
 target_link_libraries(sample_project lua)
 target_link_libraries(sample_project dl)

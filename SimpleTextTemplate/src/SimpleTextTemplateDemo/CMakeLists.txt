@@ -7,5 +7,6 @@ set(CMAKE_BUILD_TYPE RELEASE)
 set(CMAKE_CXX_FLAGS_DEBUG "-std=c++14 -Wall -g")
 set(CMAKE_CXX_FLAGS_RELEASE "-std=c++14 -Wall -O2")
 
-set(SOURCE_FILES main.cpp utils/KeyValueStore.cpp utils/KeyValueStore.h utils/StringHelper.cpp utils/StringHelper.h utils/TextTemplate.cpp utils/TextTemplate.h utils/TimeHelper.cpp utils/TimeHelper.h utils/Version.cpp utils/Version.h)
+set(TOOLBOX toolbox/KeyValueStore.cpp toolbox/KeyValueStore.h toolbox/StringHelper.cpp toolbox/StringHelper.h toolbox/TextTemplate.cpp toolbox/TextTemplate.h toolbox/TimeHelper.cpp toolbox/TimeHelper.h toolbox/Version.cpp toolbox/Version.h)
+set(SOURCE_FILES main.cpp ${TOOLBOX})
 add_executable(template_demo ${SOURCE_FILES})

@@ -1,6 +1,9 @@
-//
-// Created by Pirmin Schmid on 01.05.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: KeyValueStore
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
 #include "KeyValueStore.h"
 

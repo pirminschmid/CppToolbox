@@ -1,6 +1,9 @@
-//
-// Created by Pirmin Schmid on 19.04.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: TextTemplate
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
 #include "TextTemplate.h"
 

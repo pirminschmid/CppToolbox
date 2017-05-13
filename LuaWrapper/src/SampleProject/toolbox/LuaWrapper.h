@@ -1,9 +1,12 @@
-//
-// Created by Pirmin Schmid on 01.05.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: LuaWrapper
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
-#ifndef LUA_UTILS_LUAWRAPPER_H_
-#define LUA_UTILS_LUAWRAPPER_H_
+#ifndef TOOLBOX_LUAWRAPPER_H_
+#define TOOLBOX_LUAWRAPPER_H_
 
 #include <cstdint>
 #include <string>
@@ -24,7 +27,7 @@ namespace lua {
 	 * embedding follows the code examples of the Lua manual, with modifications.
 	 * http://www.lua.org/manual
 	 *
-	 * v1.0 2017-05-01 Pirmin Schmid
+	 * v1.2 2017-05-01 / 2017-05-12 Pirmin Schmid
 	 */
 	class LuaWrapper {
 	public:
@@ -39,6 +42,16 @@ namespace lua {
 		 * @returns true in case of success; false otherwise
 		 */
 		bool loadFile(const std::string &file_name);
+
+		std::string getErrorString();
+
+		/**
+		 * allows a restricted form of API validation of a provided
+		 * Lua script
+		 */
+		enum ApiType { kFunction, kInt, kDouble, kString };
+
+		bool check(ApiType expected_type, const std::string &name);
 
 		//--- variable access ------------------------------------------------------
 
@@ -57,12 +70,19 @@ namespace lua {
 
 		//--- various function calls -----------------------------------------------
 
+		// 1 -> 1
 		int_type callInt2Int(const std::string &function_name, int_type arg1);
-
 		std::string callString2String(const std::string &function_name, const std::string &arg1);
+		int_type callString2Int(const std::string &function_name, const std::string &arg1);
 
+		// 2 -> 1
+		int_type callStringInt2Int(const std::string &function_name, const std::string &arg1, int_type arg2);
 		std::string callStringString2String(const std::string &function_name, const std::string &arg1,
 											const std::string &arg2);
+
+		// 3 -> 1
+		std::string callStringIntInt2String(const std::string &function_name, const std::string &arg1,
+											int_type arg2, int_type arg3);
 
 		// extend function signatures as needed
 
@@ -90,4 +110,4 @@ namespace lua {
 }
 
 
-#endif //LUA_UTILS_LUAWRAPPER_H_
+#endif //TOOLBOX_LUAWRAPPER_H_

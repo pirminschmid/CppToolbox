@@ -1,9 +1,12 @@
-//
-// Created by Pirmin Schmid on 01.05.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: KeyValueStore
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
-#ifndef TOOLBOX_UTILS_KEYVALUESTORE_H_
-#define TOOLBOX_UTILS_KEYVALUESTORE_H_
+#ifndef TOOLBOX_KEYVALUESTORE_H_
+#define TOOLBOX_KEYVALUESTORE_H_
 
 #include <functional>
 #include <limits>
@@ -124,4 +127,4 @@ namespace toolbox {
 }
 
 
-#endif //TOOLBOX_UTILS_KEYVALUESTORE_H_
+#endif //TOOLBOX_KEYVALUESTORE_H_

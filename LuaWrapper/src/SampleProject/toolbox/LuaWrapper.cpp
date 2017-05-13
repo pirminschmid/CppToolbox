@@ -1,6 +1,9 @@
-//
-// Created by Pirmin Schmid on 01.05.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: LuaWrapper
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
 #include <ctime>
 #include <iostream>
@@ -29,6 +32,38 @@ namespace lua {
 		lua_pcall(L_, 0, 0, 0);
 		return result == LUA_OK;
 	}
+
+	std::string LuaWrapper::getErrorString() {
+		std::string r = lua_tostring(L_, -1);
+		return r;
+	}
+
+	bool LuaWrapper::check(LuaWrapper::ApiType expected_type, const std::string &name) {
+		lua_getglobal(L_, name.c_str());
+		bool ok = false;
+		switch(expected_type) {
+			case kFunction:
+				ok = lua_isfunction(L_, -1) != 0;
+				break;
+
+			case kInt:
+				ok = lua_isinteger(L_, -1) != 0;
+				break;
+
+			case kDouble:
+				ok = lua_isnumber(L_, -1) != 0;
+				break;
+
+			case kString:
+				ok = lua_isstring(L_, -1) != 0;
+				break;
+		}
+
+		lua_pop(L_, 1);
+		return ok;
+	}
+
+	//--- variable access ------------------------------------------------------
 
 	std::string LuaWrapper::getString(const std::string &variable_name) {
 		lua_getglobal(L_, variable_name.c_str());
@@ -81,6 +116,9 @@ namespace lua {
 		lua_setglobal(L_, variable_name.c_str());
 	}
 
+
+	//--- function calls -------------------------------------------------------
+
 	LuaWrapper::int_type LuaWrapper::callInt2Int(const std::string &function_name, LuaWrapper::int_type arg1) {
 		lua_getglobal(L_, function_name.c_str());
 		if (!lua_isfunction(L_, -1)) {
@@ -129,6 +167,56 @@ namespace lua {
 		return r;
 	}
 
+	LuaWrapper::int_type LuaWrapper::callString2Int(const std::string &function_name, const std::string &arg1) {
+		lua_getglobal(L_, function_name.c_str());
+		if (!lua_isfunction(L_, -1)) {
+			std::cerr << "LuaWrapper ERROR: function " << function_name << " not found" << std::endl;
+			return 0;
+		}
+
+		lua_pushstring(L_, arg1.c_str());
+		if (lua_pcall(L_, 1, 1, 0) != 0) {
+			std::cerr << "LuaWrapper ERROR: function " << function_name << ": error during execution" << std::endl;
+			return 0;
+		}
+
+		if (!lua_isinteger(L_, -1)) {
+			std::cerr << "LuaWrapper ERROR: function " << function_name << " did not return an integer value" << std::endl;
+			return 0;
+		}
+
+		int_type r = lua_tointeger(L_, -1);
+		lua_pop(L_, 1);
+
+		return r;
+	}
+
+	LuaWrapper::int_type LuaWrapper::callStringInt2Int(const std::string &function_name, const std::string &arg1,
+													   LuaWrapper::int_type arg2) {
+		lua_getglobal(L_, function_name.c_str());
+		if (!lua_isfunction(L_, -1)) {
+			std::cerr << "LuaWrapper ERROR: function " << function_name << " not found" << std::endl;
+			return 0;
+		}
+
+		lua_pushstring(L_, arg1.c_str());
+		lua_pushinteger(L_, arg2);
+		if (lua_pcall(L_, 2, 1, 0) != 0) {
+			std::cerr << "LuaWrapper ERROR: function " << function_name << ": error during execution" << std::endl;
+			return 0;
+		}
+
+		if (!lua_isinteger(L_, -1)) {
+			std::cerr << "LuaWrapper ERROR: function " << function_name << " did not return an integer value" << std::endl;
+			return 0;
+		}
+
+		int_type r = lua_tointeger(L_, -1);
+		lua_pop(L_, 1);
+
+		return r;
+	}
+
 	std::string LuaWrapper::callStringString2String(const std::string &function_name, const std::string &arg1,
 													const std::string &arg2) {
 		lua_getglobal(L_, function_name.c_str());
@@ -140,6 +228,33 @@ namespace lua {
 		lua_pushstring(L_, arg1.c_str());
 		lua_pushstring(L_, arg2.c_str());
 		if (lua_pcall(L_, 2, 1, 0) != 0) {
+			std::cerr << "LuaWrapper ERROR: function " << function_name << ": error during execution" << std::endl;
+			return std::string("");
+		}
+
+		if (!lua_isstring(L_, -1)) {
+			std::cerr << "LuaWrapper ERROR: function " << function_name << " did not return a string value" << std::endl;
+			return std::string("");
+		}
+
+		std::string r = lua_tostring(L_, -1);
+		lua_pop(L_, 1);
+
+		return r;
+	}
+
+	std::string LuaWrapper::callStringIntInt2String(const std::string &function_name, const std::string &arg1,
+													LuaWrapper::int_type arg2, LuaWrapper::int_type arg3) {
+		lua_getglobal(L_, function_name.c_str());
+		if (!lua_isfunction(L_, -1)) {
+			std::cerr << "LuaWrapper ERROR: function " << function_name << " not found" << std::endl;
+			return std::string("");
+		}
+
+		lua_pushstring(L_, arg1.c_str());
+		lua_pushinteger(L_, arg2);
+		lua_pushinteger(L_, arg3);
+		if (lua_pcall(L_, 3, 1, 0) != 0) {
 			std::cerr << "LuaWrapper ERROR: function " << function_name << ": error during execution" << std::endl;
 			return std::string("");
 		}

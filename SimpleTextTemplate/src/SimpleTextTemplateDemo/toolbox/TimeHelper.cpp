@@ -1,6 +1,9 @@
-//
-// Created by Pirmin Schmid on 22.04.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: TimeHelper
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
 #include "TimeHelper.h"
 

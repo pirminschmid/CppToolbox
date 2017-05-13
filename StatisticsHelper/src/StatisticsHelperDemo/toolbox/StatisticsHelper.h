@@ -1,9 +1,12 @@
-//
-// Created by Pirmin Schmid on 13.04.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: StatisticsHelper
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
-#ifndef TOOLBOX_UTILS_STATISTICSHELPER_H_
-#define TOOLBOX_UTILS_STATISTICSHELPER_H_
+#ifndef TOOLBOX_STATISTICSHELPER_H_
+#define TOOLBOX_STATISTICSHELPER_H_
 
 #include <cstdint>
 #include <ostream>
@@ -109,4 +112,4 @@ namespace toolbox {
 
 }
 
-#endif //TOOLBOX_UTILS_STATISTICSHELPER_H_
+#endif //TOOLBOX_STATISTICSHELPER_H_

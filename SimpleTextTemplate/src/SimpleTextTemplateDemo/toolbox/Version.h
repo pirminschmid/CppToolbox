@@ -1,9 +1,12 @@
-//
-// Created by Pirmin Schmid on 13.04.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: Version
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
-#ifndef TOOLBOX_UTILS_VERSION_H_
-#define TOOLBOX_UTILS_VERSION_H_
+#ifndef TOOLBOX_VERSION_H_
+#define TOOLBOX_VERSION_H_
 
 #include <ostream>
 #include <string>
@@ -27,4 +30,4 @@ namespace toolbox {
 
 }
 
-#endif //TOOLBOX_UTILS_VERSION_H_
+#endif //TOOLBOX_VERSION_H_

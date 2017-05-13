@@ -1,9 +1,12 @@
-//
-// Created by Pirmin Schmid on 12.04.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: LinkedMap
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
-#ifndef TOOLBOX_UTILS_LINKED_MAP_H_
-#define TOOLBOX_UTILS_LINKED_MAP_H_
+#ifndef TOOLBOX_LINKED_MAP_H_
+#define TOOLBOX_LINKED_MAP_H_
 
 #include <cstdint>
 #include <functional>
@@ -360,4 +363,4 @@ namespace toolbox {
 
 }
 
-#endif //TOOLBOX_UTILS_LINKED_MAP_H_
+#endif //TOOLBOX_LINKED_MAP_H_

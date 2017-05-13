@@ -1,9 +1,12 @@
-//
-// Created by Pirmin Schmid on 19.04.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: TextTemplate
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
-#ifndef TOOLBOX_UTILS_TEXTTEMPLATE_H_
-#define TOOLBOX_UTILS_TEXTTEMPLATE_H_
+#ifndef TOOLBOX_TEXTTEMPLATE_H_
+#define TOOLBOX_TEXTTEMPLATE_H_
 
 #include <ostream>
 #include <unordered_map>
@@ -71,4 +74,4 @@ namespace toolbox {
 
 }
 
-#endif //TOOLBOX_UTILS_TEXTTEMPLATE_H_
+#endif //TOOLBOX_TEXTTEMPLATE_H_

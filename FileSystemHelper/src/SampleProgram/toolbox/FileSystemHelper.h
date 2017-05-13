@@ -1,9 +1,12 @@
-//
-// Created by Pirmin Schmid on 13.04.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: FileSystemHelper
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
-#ifndef TOOLBOX_UTILS_FILESYSTEMHELPER_H_
-#define TOOLBOX_UTILS_FILESYSTEMHELPER_H_
+#ifndef TOOLBOX_FILESYSTEMHELPER_H_
+#define TOOLBOX_FILESYSTEMHELPER_H_
 
 #include <functional>
 #include <string>
@@ -84,4 +87,4 @@ namespace toolbox {
 
 }
 
-#endif //TOOLBOX_UTILS_FILESYSTEMHELPER_H_
+#endif //TOOLBOX_FILESYSTEMHELPER_H_

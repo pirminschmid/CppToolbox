@@ -1,6 +1,9 @@
-//
-// Created by Pirmin Schmid on 13.04.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: FileSystemHelper
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
 #include "FileSystemHelper.h"
 

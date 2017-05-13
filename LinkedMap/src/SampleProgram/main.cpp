@@ -1,13 +1,16 @@
-//
-// Created by Pirmin Schmid on 12.04.17.
-//
+/*------------------------------------------------------------------------------
+ * CppToolbox: LinkedMap
+ * https://github.com/pirminschmid/CppToolbox
+ *
+ * Copyright (c) 2017, Pirmin Schmid, MIT license
+ *----------------------------------------------------------------------------*/
 
 #include <functional>
 #include <memory>
 #include <string>
 #include <iostream>
 
-#include "utils/LinkedMap.h"
+#include "toolbox/LinkedMap.h"
 
 using namespace std;
 using namespace toolbox;
