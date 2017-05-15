@@ -66,6 +66,8 @@ namespace toolbox {
 
 		//--- access -----------------------------------------------------------
 
+		bool hasKey(const std::string &key) const;
+
 		std::string getString(const std::string &key, error_message_handler_type emh = emDoNothing) const;
 
 		void setString(const std::string &key, const std::string &value);

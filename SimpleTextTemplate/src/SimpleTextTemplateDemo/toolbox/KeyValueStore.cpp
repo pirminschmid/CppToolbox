@@ -91,6 +91,11 @@ namespace toolbox {
 
 	//--- access -----------------------------------------------------------
 
+	bool KeyValueStore::hasKey(const std::string &key) const {
+		auto it = store_.find(key);
+		return it != store_.end();
+	}
+
 	std::string KeyValueStore::getString(const std::string &key, KeyValueStore::error_message_handler_type emh) const {
 		auto it = store_.find(key);
 		if (it == store_.end()) {
