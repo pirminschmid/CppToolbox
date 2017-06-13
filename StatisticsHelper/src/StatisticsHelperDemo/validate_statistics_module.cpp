@@ -22,7 +22,7 @@ using namespace toolbox;
  *
  * and some additional corner case tests.
  *
- * v1.0 2017-04-23 Pirmin Schmid
+ * v1.1 2017-06-13 Pirmin Schmid
  */
 
 
@@ -138,6 +138,7 @@ static double denominator1 = 1.0;
 
 // see PDF file with reference values
 static StatisticsHelper::Summary reference1 = {
+		.available_data = StatisticsHelper::kFull,
 		.count       =     101,
 
 		/* robust */
@@ -152,7 +153,16 @@ static StatisticsHelper::Summary reference1 = {
 		.sd          =  102380.3052,
 		.sem         =   10187.2211,
 		.ci95_a      =  982078.5662,
-		.ci95_b      = 1022500.8793
+		.ci95_b      = 1022500.8793,
+
+		/* alternative means */
+		.harmonic_mean         =  991356.5283,
+		.harmonic_mean_ci95_a  =  970484.5985,
+		.harmonic_mean_ci95_b  = 1013145.9637,
+
+		.geometric_mean        =  996925.5055,
+		.geometric_mean_ci95_a =  976427.0966,
+		.geometric_mean_ci95_b = 1017854.2432
 };
 
 
@@ -198,6 +208,7 @@ static double denominator2 = 32.0;
 
 // see PDF file with reference values
 static StatisticsHelper::Summary reference2 = {
+		.available_data = StatisticsHelper::kFull,
 		.count       =      31,
 
 		/* robust */
@@ -212,7 +223,16 @@ static StatisticsHelper::Summary reference2 = {
 		.sd          =    6811.9025,
 		.sem         =    1223.4538,
 		.ci95_a      =   27227.5766,
-		.ci95_b      =   32224.8286
+		.ci95_b      =   32224.8286,
+
+		/* alternative means */
+		.harmonic_mean         = 27522.1241,
+		.harmonic_mean_ci95_a  = 24203.8611,
+		.harmonic_mean_ci95_b  = 31894.7856,
+
+		.geometric_mean        = 28780.3080,
+		.geometric_mean_ci95_a = 25985.3670,
+		.geometric_mean_ci95_b = 31875.8679
 };
 
 //--- data set 3 - a corner case -----------------------------------------------
@@ -229,6 +249,7 @@ static double denominator3 = 1.0;
 
 // see PDF file with reference values
 static StatisticsHelper::Summary reference3 = {
+		.available_data = StatisticsHelper::kFull,
 		.count       =       4,
 
 		/* robust */
@@ -243,8 +264,30 @@ static StatisticsHelper::Summary reference3 = {
 		.sd          =       1.2910,
 		.sem         =       0.6455,
 		.ci95_a      =       0.4457,
-		.ci95_b      =       4.5543
+		.ci95_b      =       4.5543,
+
+		/* alternative means */
+		.harmonic_mean         = 1.9200,
+		/* actual reference:
+		.harmonic_mean_ci95_a  = StatisticsHelper::kNaN,
+		.harmonic_mean_ci95_b  = StatisticsHelper::kNaN,
+
+		 adjusted, as explained below:
+		 */
+		.harmonic_mean_ci95_a  = 0.9476,
+		.harmonic_mean_ci95_b  = StatisticsHelper::kPosInf,
+
+		.geometric_mean        = 2.2134,
+		.geometric_mean_ci95_a = 0.8504,
+		.geometric_mean_ci95_b = 5.7610
 };
+
+// note on kNaN / kPosInf used here: 95% CI of harmonic mean calculation has the
+// limits as described in StatisticsHelper, and thus no value is shown in the
+// reference statistics software. Thus: NaN is used here to express this.
+// As a difference: StatisticsHelper reports the lower bound and +inf as upper
+// bound in this particular case. Thus, they are accepted as ok values in this
+// case.
 
 
 //--- additional corner cases --------------------------------------------------
@@ -254,6 +297,7 @@ static const vector<double> cc0 = {};
 static double denominator_cc0 = 1.0;
 
 static StatisticsHelper::Summary ref_cc0 = {
+		.available_data = StatisticsHelper::kFull,
 		.count       =       0,
 
 		/* robust */
@@ -268,7 +312,16 @@ static StatisticsHelper::Summary ref_cc0 = {
 		.sd          =       0.0000,
 		.sem         =       0.0000,
 		.ci95_a      =       0.0000,
-		.ci95_b      =       0.0000
+		.ci95_b      =       0.0000,
+
+		/* alternative means */
+		.harmonic_mean         = 0.0000,
+		.harmonic_mean_ci95_a  = 0.0000,
+		.harmonic_mean_ci95_b  = 0.0000,
+
+		.geometric_mean        = 0.0000,
+		.geometric_mean_ci95_a = 0.0000,
+		.geometric_mean_ci95_b = 0.0000
 };
 
 static const vector<double> cc1 = {
@@ -278,12 +331,13 @@ static const vector<double> cc1 = {
 static double denominator_cc1 = 1.0;
 
 // note: q1 and q3 are not really calculated and do not make sense with this small number
-// (need n=4 for true calculation)
+// (n should be >= 4)
 // however with given monotonous order min <= q1 <= median <= q3 <= max,
 // q1 and q3 are clear, as much as min, median, and max are clear, too.
 // however, they are not printed in the print function on purpose.
 // It just does not make sense.
 static StatisticsHelper::Summary ref_cc1 = {
+		.available_data = StatisticsHelper::kFull,
 		.count       =       1,
 
 		/* robust */
@@ -297,8 +351,17 @@ static StatisticsHelper::Summary ref_cc1 = {
 		.mean        =       3.1415,
 		.sd          =       0.0000,
 		.sem         =       0.0000,
-		.ci95_a      =       0.0000,
-		.ci95_b      =       0.0000
+		.ci95_a      =       3.1415,
+		.ci95_b      =       3.1415,
+
+		/* alternative means */
+		.harmonic_mean         = 3.1415,
+		.harmonic_mean_ci95_a  = 3.1415,
+		.harmonic_mean_ci95_b  = 3.1415,
+
+		.geometric_mean        = 3.1415,
+		.geometric_mean_ci95_a = 3.1415,
+		.geometric_mean_ci95_b = 3.1415
 };
 
 
@@ -310,12 +373,13 @@ static const vector<double> cc2 = {
 static double denominator_cc2 = 1.0;
 
 // note: q1 and q3 are not really calculated and do not make sense with this small number
-// (need n=4 for true calculation)
+// (n should be >= 4)
 // however with given monotonous order min <= q1 <= median <= q3 <= max,
-// q1 == min and q3 == max are returned (as in reference statistics program.
-// however, they are not printed in the print function on purpose
+// q1 and q3 are clear, as much as min, median, and max are clear, too.
+// however, they are not printed in the print function on purpose.
 // It just does not make sense.
 static StatisticsHelper::Summary ref_cc2 = {
+		.available_data = StatisticsHelper::kFull,
 		.count       =       2,
 
 		/* robust */
@@ -330,8 +394,26 @@ static StatisticsHelper::Summary ref_cc2 = {
 		.sd          =       0.7071,
 		.sem         =       0.5000,
 		.ci95_a      =      -4.8531,
-		.ci95_b      =       7.8531
+		.ci95_b      =       7.8531,
+
+		/* alternative means */
+		.harmonic_mean         = 1.3333,
+		/* actual reference:
+		.harmonic_mean_ci95_a  = StatisticsHelper::kNaN,
+		.harmonic_mean_ci95_b  = StatisticsHelper::kNaN,
+
+ 		adjusted, as explained below:
+ 		*/
+		.harmonic_mean_ci95_a  = 0.2547,
+		.harmonic_mean_ci95_b  = StatisticsHelper::kPosInf,
+
+		.geometric_mean        =   1.4142,
+		.geometric_mean_ci95_a =   0.01730,
+		.geometric_mean_ci95_b = 115.6084
 };
+
+// note on kNaN / kPosInf used here:
+// see comment on data set 3 above
 
 
 static const vector<double> cc3 = {
@@ -342,13 +424,10 @@ static const vector<double> cc3 = {
 
 static double denominator_cc3 = 1.0;
 
-// note: q1 and q3 are not really calculated and do not make sense with this small number
-// (need n=4 for true calculation)
-// however with given monotonous order min <= q1 <= median <= q3 <= max,
-// q1 == min and q3 == max are returned (as in reference statistics program.
-// however, they are not printed in the print function on purpose
-// It just does not make sense.
+// note: q1 and q3 are calculated as a corner case to match reference data
+// but are not printed (n should be >= 4) for truely meaningful q1 and q3.
 static StatisticsHelper::Summary ref_cc3 = {
+		.available_data = StatisticsHelper::kFull,
 		.count       =       3,
 
 		/* robust */
@@ -363,13 +442,118 @@ static StatisticsHelper::Summary ref_cc3 = {
 		.sd          =       1.0000,
 		.sem         =       0.5774,
 		.ci95_a      =      -0.4841,
-		.ci95_b      =       4.4841
+		.ci95_b      =       4.4841,
+
+		/* alternative means */
+		.harmonic_mean         = 1.6364,
+		/* actual reference:
+		.harmonic_mean_ci95_a  = StatisticsHelper::kNaN,
+		.harmonic_mean_ci95_b  = StatisticsHelper::kNaN,
+
+ 		adjusted, as explained below:
+ 		*/
+		.harmonic_mean_ci95_a  = 0.6789,
+		.harmonic_mean_ci95_b  = StatisticsHelper::kPosInf,
+
+		.geometric_mean        =  1.8171,
+		.geometric_mean_ci95_a =  0.4571,
+		.geometric_mean_ci95_b =  7.2233
 };
+
+
+// corner case for harmonic and geometric means
+// value <= 0.0 in data set
+// note: all values must be > 0.0 for these means
+// -> thus returning NaN values
+
+static const vector<double> cc4 = {
+		88, 120, 78,
+		67, 69, 114,
+		137, 97, 56,
+		99, 113, 95,
+		90, 82, 54,
+		122, 75, 128,
+		104, 92, 0
+};
+
+static double denominator_cc4 = 1.0;
+
+static StatisticsHelper::Summary ref_cc4 = {
+		.available_data = StatisticsHelper::kFull,
+		.count       =       21,
+
+		/* robust */
+		.min         =       0.0000,
+		.q1          =      73.5000,
+		.median      =      92.0000,
+		.q3          =     113.2500,
+		.max         =     137.0000,
+
+		/* parametric (assume normal distribution) */
+		.mean        =      89.5238,
+		.sd          =      30.8150,
+		.sem         =       6.7244,
+		.ci95_a      =      75.4970,
+		.ci95_b      =     103.5506,
+
+		/* alternative means */
+		.harmonic_mean         = StatisticsHelper::kNaN,
+		.harmonic_mean_ci95_a  = StatisticsHelper::kNaN,
+		.harmonic_mean_ci95_b  = StatisticsHelper::kNaN,
+
+		.geometric_mean        = StatisticsHelper::kNaN,
+		.geometric_mean_ci95_a = StatisticsHelper::kNaN,
+		.geometric_mean_ci95_b = StatisticsHelper::kNaN
+};
+
+
+// working control case
+
+static const vector<double> cc5 = {
+		88, 120, 78,
+		67, 69, 114,
+		137, 97, 56,
+		99, 113, 95,
+		90, 82, 54,
+		122, 75, 128,
+		104, 92, 127
+};
+
+static double denominator_cc5 = 1.0;
+
+static StatisticsHelper::Summary ref_cc5 = {
+		.available_data = StatisticsHelper::kFull,
+		.count       =       21,
+
+		/* robust */
+		.min         =      54.0000,
+		.q1          =      77.2500,
+		.median      =      95.0000,
+		.q3          =     115.5000,
+		.max         =     137.0000,
+
+		/* parametric (assume normal distribution) */
+		.mean        =      95.5714,
+		.sd          =      24.0968,
+		.sem         =       5.2584,
+		.ci95_a      =      84.6027,
+		.ci95_b      =     106.5402,
+
+		/* alternative means */
+		.harmonic_mean         =  89.2947,
+		.harmonic_mean_ci95_a  =  79.0731,
+		.harmonic_mean_ci95_b  = 102.5513,
+
+		.geometric_mean        =  92.5044,
+		.geometric_mean_ci95_a =  81.8964,
+		.geometric_mean_ci95_b = 104.4865
+};
+
 //--- compare data -------------------------------------------------------------
 
-// narrow relative tolerance 0.00001 (check for 0.001 % difference)
+// narrow relative tolerance 0.0001 (check for 0.01 % difference)
 // arithmetics should work nicely
-static constexpr double kRelativeTolerance_narrow = 0.00001;
+static constexpr double kRelativeTolerance_narrow = 0.0001;
 
 // wide relative tolerance 0.001 (check for 0.1 % difference)
 // see potential difference in Student t values (rounding in table)
@@ -379,6 +563,12 @@ static constexpr double kRelativeTolerance_wide = 0.001;
 static void printDouble(const string &title, double value, double reference, double rtol) {
 	string ok_str;
 	if (fabs(value - reference) <= fabs(rtol * reference)) {
+		ok_str = "  OK  ";
+	} else if (value == StatisticsHelper::kNaN && reference == StatisticsHelper::kNaN) {
+		ok_str = "  OK  ";
+	} else if (value == StatisticsHelper::kPosInf && reference == StatisticsHelper::kPosInf) {
+		ok_str = "  OK  ";
+	} else if (std::isnan(value) && std::isnan(reference)) {
 		ok_str = "  OK  ";
 	} else {
 		ok_str = " WRONG";
@@ -448,6 +638,13 @@ static void runComparison(const string &title, const vector<double> &values, dou
 	printDouble("sem (wider RTOL)", stat.sem, ref.sem, kRelativeTolerance_wide);
 	printDouble("ci95_a (wider RTOL)", stat.ci95_a, ref.ci95_a, kRelativeTolerance_wide);
 	printDouble("ci95_b (wider RTOL)", stat.ci95_b, ref.ci95_b, kRelativeTolerance_wide);
+	cout << "additional means" << endl;
+	printDouble("harmonic mean", stat.harmonic_mean, ref.harmonic_mean, kRelativeTolerance_narrow);
+	printDouble("harmonic mean ci95_a (wider RTOL)", stat.harmonic_mean_ci95_a, ref.harmonic_mean_ci95_a, kRelativeTolerance_wide);
+	printDouble("harmonic mean ci95_b (wider RTOL)", stat.harmonic_mean_ci95_b, ref.harmonic_mean_ci95_b, kRelativeTolerance_wide);
+	printDouble("geometric mean", stat.geometric_mean, ref.geometric_mean, kRelativeTolerance_narrow);
+	printDouble("geometric mean ci95_a (wider RTOL)", stat.geometric_mean_ci95_a, ref.geometric_mean_ci95_a, kRelativeTolerance_wide);
+	printDouble("geometric mean ci95_b (wider RTOL)", stat.geometric_mean_ci95_b, ref.geometric_mean_ci95_b, kRelativeTolerance_wide);
 }
 
 //--- main ---------------------------------------------------------------------
@@ -466,5 +663,10 @@ int main() {
 	runComparison("Corner case 1. n=1.", cc1, denominator_cc1, ref_cc1);
 	runComparison("Corner case 2. n=2.", cc2, denominator_cc2, ref_cc2);
 	runComparison("Corner case 3. n=3.", cc3, denominator_cc3, ref_cc3);
+
+	// corner cases with harmonic and geometric means
+	runComparison("Corner case 4. harmonic and geometric means with a value <= 0 in data set", cc4, denominator_cc4, ref_cc4);
+	runComparison("Corner case 5. control case (all ok)", cc5, denominator_cc5, ref_cc5);
+
 	return 0;
 }

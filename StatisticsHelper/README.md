@@ -3,7 +3,7 @@ StatisticsHelper
 
 This class provides some basic descriptive statistics functions, such as median, quartiles, mean, SD, 95% confidence intervals. The functions are not intended as a replacement for a statistics package but can serve well to report/log more detailed/expressive summary data.
 
-Current version April 2017.  [Feedback][feedback] welcome.
+Current version June 2017.  [Feedback][feedback] welcome.
 
 
 Usage

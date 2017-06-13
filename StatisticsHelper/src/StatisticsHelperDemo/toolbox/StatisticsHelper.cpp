@@ -7,16 +7,25 @@
 
 #include "StatisticsHelper.h"
 
-#include <cassert>
 #include <cmath>
 #include <algorithm>
-#include <limits>
 
 
 namespace toolbox {
 
+	double StatisticsHelper::sum(const std::vector<double> &values) {
+		const auto n = values.size();
+		if (n == 0) {
+			return 0.0;
+		}
+
+		std::vector<double> sorted_values(values);
+		std::sort(sorted_values.begin(), sorted_values.end());
+		return calcSum(sorted_values);
+	}
+
 	double StatisticsHelper::median(const std::vector<double> &values) {
-		const unsigned long n = values.size();
+		const auto n = values.size();
 		if (n == 0) {
 			return 0.0;
 		}
@@ -24,7 +33,7 @@ namespace toolbox {
 		std::vector<double> sorted_values(values);
 		std::sort(sorted_values.begin(), sorted_values.end());
 
-		const unsigned long m = n / 2;
+		const auto m = n / 2;
 
 		if (n % 2 == 0) {
 			return 0.5 * (sorted_values[m - 1] + sorted_values[m]);
@@ -33,104 +42,123 @@ namespace toolbox {
 		}
 	}
 
-	double StatisticsHelper::mean(const std::vector<double> &values) {
-		if (values.size() == 0) {
+	double StatisticsHelper::arithmeticMean(const std::vector<double> &values) {
+		const auto n = values.size();
+		if (n == 0) {
 			return 0.0;
 		}
 
-		const double n = static_cast<double>(values.size());
+		std::vector<double> sorted_values(values);
+		std::sort(sorted_values.begin(), sorted_values.end());
 
-		double sum = 0.0;
-		for (double v : values) {
-			sum += v;
-		}
-		return sum / n;
+		const MeanAndCI result = calcArithmeticMeanAndCI(sorted_values, true);
+		return result.mean;
 	}
 
-	StatisticsHelper::Summary StatisticsHelper::calcSummary(const std::vector<double> &values) {
+	double StatisticsHelper::harmonicMean(const std::vector<double> &values) {
+		const auto n = values.size();
+		if (n == 0) {
+			return 0.0;
+		}
+
+		std::vector<double> sorted_values(values);
+		std::sort(sorted_values.begin(), sorted_values.end());
+
+		const MeanAndCI result = calcHarmonicMeanAndCI(sorted_values, true);
+		return result.mean;
+	}
+
+	double StatisticsHelper::geometricMean(const std::vector<double> &values) {
+		const auto n = values.size();
+		if (n == 0) {
+			return 0.0;
+		}
+
+		std::vector<double> sorted_values(values);
+		std::sort(sorted_values.begin(), sorted_values.end());
+
+		const MeanAndCI result = calcGeometricMeanAndCI(sorted_values, true);
+		return result.mean;
+	}
+
+	const StatisticsHelper::Summary StatisticsHelper::calcSummary(const std::vector<double> &values, ContentType content) {
 		Summary result = {};
 
-		// n
-		count_type n = values.size();
+		result.available_data = content;
+
+		const count_type n = values.size();
 		if (n == 0) {
 			return result;
 		}
+
 		result.count = n;
 
-		// mean, min, max
-		double sum = 0.0;
-		double min = std::numeric_limits<double>::max();
-		double max = 0.0;
-		for (double v : values) {
-			sum += v;
+		std::vector<double> sorted_values(values);
+		std::sort(sorted_values.begin(), sorted_values.end());
 
-			if (v < min) {
-				min = v;
-			}
+		if ((kRobust & content) == kRobust) {
+			if (1 < n) {
+				result.min = sorted_values[0];
+				result.max = sorted_values[sorted_values.size() - 1];
 
-			if (v > max) {
-				max = v;
-			}
-		}
+				result.median = getPercentile(sorted_values, 0.5);
 
-		const double mean = sum / static_cast<double>(n);
-		result.mean = mean;
-		result.min = min;
-		result.max = max;
-
-		// robust, continued: median and quartiles
-		if (1 < n) {
-			std::vector<double> sorted_values(values);
-			std::sort(sorted_values.begin(), sorted_values.end());
-			result.median = getPercentile(sorted_values, 0.5);
-
-			if (2 < n) {
-				// just the bare minimum to work
-				// of course these quartiles will have large 95% confidence intervals by themselves
-				// thus: choose larger n for meaningful results, of course
-				result.q1 = getPercentile(sorted_values, 0.25);
-				result.q3 = getPercentile(sorted_values, 0.75);
+				if (2 < n) {
+					// just the bare minimum to work
+					// of course these quartiles will have large 95% confidence intervals by themselves
+					// thus: choose larger n for meaningful results, of course
+					result.q1 = getPercentile(sorted_values, 0.25);
+					result.q3 = getPercentile(sorted_values, 0.75);
+				} else {
+					result.q1 = result.min;
+					result.q3 = result.max;
+				}
 			} else {
-				result.q1 = result.min;
-				result.q3 = result.max;
+				const double value = values[0];
+				result.median = value;
+				result.min = value;
+				result.q1 = value;
+				result.q3 = value;
+				result.max = value;
 			}
-
-		} else {
-			result.median = result.min;
-			result.q1 = result.min;
-			result.q3 = result.max;
 		}
 
-		// parametric (assuming normal distribution)
-		if (1 < n) {
-			// this is just the bare minimum to avoid div/0
-			double s2 = 0.0;
-			for (double v : values) {
-				const double delta = v - mean;
-				s2 += delta * delta;
-			}
+		if ((kParametric & content) == kParametric) {
+			// assuming normal distribution
+			MeanAndCI meanAndCI = calcArithmeticMeanAndCI(sorted_values, false);
+			result.mean = meanAndCI.mean;
+			result.sd = meanAndCI.sd;
+			result.sem = meanAndCI.sem;
+			result.ci95_a = meanAndCI.ci95_a;
+			result.ci95_b = meanAndCI.ci95_b;
+		}
 
-			const double variance_estimate = s2 / static_cast<double>(n - 1);
-			const double sd = std::sqrt(variance_estimate);
-			result.sd = sd;
-			const double sem = sd / std::sqrt(static_cast<double>(n));
-			result.sem = sem;
+		if ((kHarmonicMean & content) == kHarmonicMean) {
+			MeanAndCI meanAndCI = calcHarmonicMeanAndCI(sorted_values, false);
+			result.harmonic_mean = meanAndCI.mean;
+			result.harmonic_mean_ci95_a = meanAndCI.ci95_a;
+			result.harmonic_mean_ci95_b = meanAndCI.ci95_b;
+		}
 
-			const double ci95_delta = getTValue(n - 1) * sem;
-			result.ci95_a = mean - ci95_delta;
-			result.ci95_b = mean + ci95_delta;
+		if ((kGeometricMean & content) == kGeometricMean) {
+			MeanAndCI meanAndCI = calcGeometricMeanAndCI(sorted_values, false);
+			result.geometric_mean = meanAndCI.mean;
+			result.geometric_mean_ci95_a = meanAndCI.ci95_a;
+			result.geometric_mean_ci95_b = meanAndCI.ci95_b;
 		}
 
 		return result;
 	}
 
 	void StatisticsHelper::printSummary(std::ostream *out, const std::string &title,
-										const Summary &stat, StatisticsHelper::SummaryPrintStyle style) {
+										const Summary &stat, StatisticsHelper::ContentType style) {
 
 		*out << std::endl << title << std::endl;
 
-		bool printRobust = style == kFull || style == kRobust;
-		bool printParametric = style == kFull || style == kParametric;
+		bool printRobust = (kRobust & style & stat.available_data) == kRobust;
+		bool printParametric = (kParametric & style & stat.available_data) == kParametric;
+		bool printHarmonicMean = (kHarmonicMean & style & stat.available_data) == kHarmonicMean;
+		bool printGeometricMean = (kGeometricMean & style & stat.available_data) == kGeometricMean;
 
 		switch (stat.count) {
 			case 0:
@@ -172,17 +200,166 @@ namespace toolbox {
 				 << ", 95% CI for the mean [" << stat.ci95_a << ", " << stat.ci95_b
 				 << "], n = " << stat.count << std::endl;
 		}
+
+		if (printHarmonicMean) {
+			*out << "- harmonic mean: " << stat.harmonic_mean
+				 << ", 95% CI for the mean [" << stat.harmonic_mean_ci95_a << ", " << stat.harmonic_mean_ci95_b
+				 << "], n = " << stat.count << std::endl;
+		}
+
+		if (printGeometricMean) {
+			*out << "- geometric mean: " << stat.geometric_mean
+				 << ", 95% CI for the mean [" << stat.geometric_mean_ci95_a << ", " << stat.geometric_mean_ci95_b
+				 << "], n = " << stat.count << std::endl;
+		}
 	}
 
 	void StatisticsHelper::calcAndPrintSummary(std::ostream *out, const std::string &title,
 											   const std::vector<double> &values,
-											   StatisticsHelper::SummaryPrintStyle style) {
+											   StatisticsHelper::ContentType style) {
 
-		printSummary(out, title, calcSummary(values), style);
+		printSummary(out, title, calcSummary(values, style), style);
 	}
 
 
 	//--- private helper functions ---------------------------------------------
+
+	double StatisticsHelper::calcSum(const std::vector<double> &sorted_values) {
+		double sum = 0.0;
+		double c = 0.0;
+
+		for (const double v : sorted_values) {
+			double y = v - c;
+			double t = sum + y;
+			c = (t - sum) - y;
+			sum = t;
+		}
+
+		return sum;
+	}
+
+	const StatisticsHelper::MeanAndCI StatisticsHelper::calcArithmeticMeanAndCI(const std::vector<double> &sorted_values, bool only_mean) {
+		MeanAndCI result = {};
+		const auto n = sorted_values.size();
+
+		if (n == 0) {
+			return result;
+		}
+
+		const double mean = calcSum(sorted_values) / static_cast<double>(n);
+		result.mean = mean;
+
+		if (only_mean) {
+			return result;
+		}
+
+		if (n == 1) {
+			result.sd = 0.0;
+			result.sem = 0.0;
+			result.ci95_a = result.mean;
+			result.ci95_b = result.mean;
+			return result;
+		}
+
+		std::vector<double> deltas(n);
+		count_type count = 0;
+		for (const double v : sorted_values) {
+			const double delta = v - mean;
+			deltas[count++] = delta * delta;
+		}
+
+		// use sum() here, and not calcSum(), to sort the deltas first
+		const double variance_estimate = sum(deltas) / static_cast<double>(n - 1);
+		const double sd = std::sqrt(variance_estimate);
+		result.sd = sd;
+		const double sem = sd / std::sqrt(static_cast<double>(n));
+		result.sem = sem;
+
+		const double ci95_delta = getTValue(n - 1) * sem;
+		result.ci95_a = mean - ci95_delta;
+		result.ci95_b = mean + ci95_delta;
+
+		return result;
+	}
+
+	const StatisticsHelper::MeanAndCI StatisticsHelper::calcHarmonicMeanAndCI(const std::vector<double> &sorted_values, bool only_mean) {
+		MeanAndCI result = {};
+		const auto n = sorted_values.size();
+
+		if (n == 0) {
+			return result;
+		}
+
+		std::vector<double> inverses;
+		inverses.reserve(n);
+
+		for (const double v : sorted_values) {
+			if (v > 0.0) {
+				inverses.push_back(1.0 / v);
+			} else {
+				result = { kNaN, kNaN, kNaN, kNaN, kNaN };
+				return result;
+			}
+		}
+
+		const MeanAndCI am = calcArithmeticMeanAndCI(inverses, only_mean);
+
+		if (0.0 < am.mean) {
+			result.mean = 1.0 / am.mean;
+
+			if (only_mean) {
+				return result;
+			}
+
+			if (0.0 < am.ci95_b) {
+				result.ci95_a = 1.0 / am.ci95_b;
+			}
+
+			if (0.0 < am.ci95_a) {
+				result.ci95_b = 1.0 / am.ci95_a;
+			} else {
+				result.ci95_b = kPosInf;
+			}
+		} else {
+			result = { kNaN, kNaN, kNaN, kNaN, kNaN };
+			return result;
+		}
+
+		return result;
+	}
+
+	const StatisticsHelper::MeanAndCI StatisticsHelper::calcGeometricMeanAndCI(const std::vector<double> &sorted_values, bool only_mean) {
+		MeanAndCI result = {};
+		const auto n = sorted_values.size();
+
+		if (n == 0) {
+			return result;
+		}
+
+		std::vector<double> logs;
+		logs.reserve(n);
+
+		for (const double v : sorted_values) {
+			if (v > 0.0) {
+				logs.push_back(std::log(v));
+			} else {
+				result = { kNaN, kNaN, kNaN, kNaN, kNaN };
+				return result;
+			}
+		}
+
+		const MeanAndCI am = calcArithmeticMeanAndCI(logs, only_mean);
+		result.mean = std::exp(am.mean);
+
+		if (only_mean) {
+			return result;
+		}
+
+		result.ci95_a = std::exp(am.ci95_a);
+		result.ci95_b = std::exp(am.ci95_b);
+
+		return result;
+	}
 
 	double StatisticsHelper::getPercentile(const std::vector<double> &sorted_values, double percentile) {
 		const double n = static_cast<double>(sorted_values.size());
@@ -226,59 +403,59 @@ namespace toolbox {
 			{StatisticsHelper::kTableInfinity, 1.960},
 			{500, 1.965},
 			{300, 1.968},
-			{200, 1.972},
-			{150, 1.976},
-			{120, 1.980},
-			{100, 1.984},
-			{90, 1.987},
-			{80, 1.990},
-			{70, 1.994},
-			{60, 2.000},
-			{50, 2.009},
-			{48, 2.011},
-			{46, 2.013},
-			{44, 2.015},
-			{42, 2.018},
-			{40, 2.021},
-			{39, 2.023},
-			{38, 2.024},
-			{37, 2.026},
-			{36, 2.028},
-			{35, 2.030},
-			{34, 2.032},
-			{33, 2.035},
-			{32, 2.037},
-			{31, 2.040},
-			{30, 2.042},
-			{29, 2.045},
-			{28, 2.048},
-			{27, 2.052},
-			{26, 2.056},
-			{25, 2.060},
-			{24, 2.064},
-			{23, 2.069},
-			{22, 2.074},
-			{21, 2.080},
-			{20, 2.086},
-			{19, 2.093},
-			{18, 2.101},
-			{17, 2.110},
-			{16, 2.120},
-			{15, 2.131},
-			{14, 2.145},
-			{13, 2.160},
-			{12, 2.179},
-			{11, 2.201},
-			{10, 2.228},
-			{9, 2.262},
-			{8, 2.306},
-			{7, 2.365},
-			{6, 2.447},
-			{5, 2.571},
-			{4, 2.776},
-			{3, 3.182},
-			{2, 4.303},
-			{1, 12.706}
+			{200, 1.9719},
+			{150, 1.9759},
+			{120, 1.9799},
+			{100, 1.9840},
+			{90, 1.9867},
+			{80, 1.9901},
+			{70, 1.9944},
+			{60, 2.0003},
+			{50, 2.0086},
+			{48, 2.0106},
+			{46, 2.0129},
+			{44, 2.0154},
+			{42, 2.0181},
+			{40, 2.0211},
+			{39, 2.0227},
+			{38, 2.0244},
+			{37, 2.0262},
+			{36, 2.0281},
+			{35, 2.0301},
+			{34, 2.0322},
+			{33, 2.0345},
+			{32, 2.0369},
+			{31, 2.0395},
+			{30, 2.0423},
+			{29, 2.0452},
+			{28, 2.0484},
+			{27, 2.0518},
+			{26, 2.0555},
+			{25, 2.0595},
+			{24, 2.0639},
+			{23, 2.0687},
+			{22, 2.0739},
+			{21, 2.0796},
+			{20, 2.0860},
+			{19, 2.0930},
+			{18, 2.1009},
+			{17, 2.1098},
+			{16, 2.1199},
+			{15, 2.1315},
+			{14, 2.1448},
+			{13, 2.1604},
+			{12, 2.1788},
+			{11, 2.2010},
+			{10, 2.2281},
+			{9, 2.2622},
+			{8, 2.3060},
+			{7, 2.3646},
+			{6, 2.4469},
+			{5, 2.5706},
+			{4, 2.7764},
+			{3, 3.1824},
+			{2, 4.3027},
+			{1, 12.7062}
 	};
 
 }
