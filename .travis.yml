@@ -21,10 +21,18 @@ install:
 - if [ "$CXX" = "g++" ]; then export CXX="g++-6" CC="gcc-6"; fi
 
 script:
+- cd FileSystemHelper && ./compile.sh && cd ..
+- cd LinkedMap && ./compile.sh && cd ..
+- cd LuaWrapper && ./install_lua.sh && ./compile.sh && cd ..
 - cd SimpleTextTemplate && ./compile.sh && cd ..
+- cd StatisticsHelper && ./compile.sh && cd ..
 
 after_success:
+- cd FileSystemHelper && ./run.sh && cd ..
+- cd LinkedMap && ./run.sh && cd ..
+- cd LuaWrapper && ./run.sh && cd ..
 - cd SimpleTextTemplate && ./run.sh && cd ..
+- cd StatisticsHelper && ./run.sh && cd ..
 
 branches:
   only:
