@@ -104,8 +104,8 @@ namespace toolbox {
 
 		if ((kRobust & content) == kRobust) {
 			if (1 < n) {
-				result.min = sorted_values[0];
-				result.max = sorted_values[sorted_values.size() - 1];
+				result.min = sorted_values.front();
+				result.max = sorted_values.back();
 
 				result.median = getPercentile(sorted_values, 0.5);
 
