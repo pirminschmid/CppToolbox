@@ -28,11 +28,11 @@ script:
 - cd StatisticsHelper && ./compile.sh && cd ..
 
 after_success:
-- pwd && ls && cd FileSystemHelper && ./run.sh ./ && cd ..
-- pwd && ls && cd LinkedMap && ./run.sh && cd ..
-- pwd && ls && cd LuaWrapper && ./run.sh && cd ..
-- pwd && ls && cd SimpleTextTemplate && ./run.sh && cd ..
-- pwd && ls && cd StatisticsHelper && ./run.sh && cd ..
+- cd FileSystemHelper && ./run.sh ./ && cd ..
+- cd LinkedMap && ./run.sh && cd ..
+- cd LuaWrapper && ./run_sample_program.sh && cd ..
+- cd SimpleTextTemplate && ./run.sh && cd ..
+- cd StatisticsHelper && ./run.sh && cd ..
 
 branches:
   only:
