@@ -1,0 +1,34 @@
+dist: trusty
+sudo: false
+
+language: cpp
+
+compiler:
+- gcc
+- clang
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-6
+    - g++-6
+    - clang
+    - cmake
+
+install:
+- if [ "$CXX" = "g++" ]; then export CXX="g++-6" CC="gcc-6"; fi
+
+script:
+- cd SimpleTextTemplate && ./compile.sh && cd ..
+
+after_success:
+- cd SimpleTextTemplate && ./run.sh && cd ..
+
+branches:
+  only:
+  - master
+
+os:
+- linux
