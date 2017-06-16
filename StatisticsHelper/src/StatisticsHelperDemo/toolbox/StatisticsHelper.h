@@ -34,7 +34,7 @@ namespace toolbox {
 	 * - Schoonjans F, De Bacquer D, Schmid P. Estimation of population percentiles
 	 *   Epidemiology 2011;22(5):750-1
 	 *
-	 * v1.1 2017-06-13 Pirmin Schmid
+	 * v1.2 2017-06-16 Pirmin Schmid
 	 */
 
 	class StatisticsHelper {
@@ -99,22 +99,30 @@ namespace toolbox {
 		 */
 		static double sum(const std::vector<double> &values);
 
+		/**
+		 * @return median, or NaN if values.empty()
+		 */
 		static double median(const std::vector<double> &values);
 
+		/**
+ 		 * @return arithmetic mean, or NaN if values.empty()
+ 		 */
 		static double arithmeticMean(const std::vector<double> &values);
 
 		/**
 		 * suited for ratios and rates.
 		 * harmonic mean: all values of the vector values must be > 0.0
 		 *
-		 * @return harmonic mean, or NaN if any of the input values <= 0.0
+		 * @return harmonic mean,
+		 *         NaN if any of the input values <= 0.0 or values.empty()
 		 */
 		static double harmonicMean(const std::vector<double> &values);
 
 		/**
 		 * geometric mean: all values of the vector values must be > 0.0
 		 *
-		 * @return geometric mean, or NaN if any of the input values <= 0.0
+		 * @return geometric mean,
+		 *         NaN if any of the input values <= 0.0 or values.empty()
 		 */
 		static double geometricMean(const std::vector<double> &values);
 

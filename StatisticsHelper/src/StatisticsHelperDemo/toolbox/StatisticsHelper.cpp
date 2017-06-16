@@ -27,7 +27,7 @@ namespace toolbox {
 	double StatisticsHelper::median(const std::vector<double> &values) {
 		const auto n = values.size();
 		if (n == 0) {
-			return 0.0;
+			return kNaN;
 		}
 
 		std::vector<double> sorted_values(values);
@@ -45,7 +45,7 @@ namespace toolbox {
 	double StatisticsHelper::arithmeticMean(const std::vector<double> &values) {
 		const auto n = values.size();
 		if (n == 0) {
-			return 0.0;
+			return kNaN;
 		}
 
 		std::vector<double> sorted_values(values);
@@ -58,7 +58,7 @@ namespace toolbox {
 	double StatisticsHelper::harmonicMean(const std::vector<double> &values) {
 		const auto n = values.size();
 		if (n == 0) {
-			return 0.0;
+			return kNaN;
 		}
 
 		std::vector<double> sorted_values(values);
@@ -71,7 +71,7 @@ namespace toolbox {
 	double StatisticsHelper::geometricMean(const std::vector<double> &values) {
 		const auto n = values.size();
 		if (n == 0) {
-			return 0.0;
+			return kNaN;
 		}
 
 		std::vector<double> sorted_values(values);
@@ -88,6 +88,12 @@ namespace toolbox {
 
 		const count_type n = values.size();
 		if (n == 0) {
+			result = { content, 0,
+					   kNaN, kNaN, kNaN, kNaN, kNaN,
+					   kNaN, kNaN, kNaN, kNaN, kNaN,
+					   kNaN, kNaN, kNaN,
+					   kNaN, kNaN, kNaN
+			};
 			return result;
 		}
 

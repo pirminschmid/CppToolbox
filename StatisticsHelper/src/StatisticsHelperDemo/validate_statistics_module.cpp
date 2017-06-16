@@ -22,7 +22,7 @@ using namespace toolbox;
  *
  * and some additional corner case tests.
  *
- * v1.1 2017-06-13 Pirmin Schmid
+ * v1.2 2017-06-16 Pirmin Schmid
  */
 
 
@@ -301,27 +301,27 @@ static StatisticsHelper::Summary ref_cc0 = {
 		.count       =       0,
 
 		/* robust */
-		.min         =       0.0000,
-		.q1          =       0.0000,
-		.median      =       0.0000,
-		.q3          =       0.0000,
-		.max         =       0.0000,
+		.min         =       StatisticsHelper::kNaN,
+		.q1          =       StatisticsHelper::kNaN,
+		.median      =       StatisticsHelper::kNaN,
+		.q3          =       StatisticsHelper::kNaN,
+		.max         =       StatisticsHelper::kNaN,
 
 		/* parametric (assume normal distribution) */
-		.mean        =       0.0000,
-		.sd          =       0.0000,
-		.sem         =       0.0000,
-		.ci95_a      =       0.0000,
-		.ci95_b      =       0.0000,
+		.mean        =       StatisticsHelper::kNaN,
+		.sd          =       StatisticsHelper::kNaN,
+		.sem         =       StatisticsHelper::kNaN,
+		.ci95_a      =       StatisticsHelper::kNaN,
+		.ci95_b      =       StatisticsHelper::kNaN,
 
 		/* alternative means */
-		.harmonic_mean         = 0.0000,
-		.harmonic_mean_ci95_a  = 0.0000,
-		.harmonic_mean_ci95_b  = 0.0000,
+		.harmonic_mean         = StatisticsHelper::kNaN,
+		.harmonic_mean_ci95_a  = StatisticsHelper::kNaN,
+		.harmonic_mean_ci95_b  = StatisticsHelper::kNaN,
 
-		.geometric_mean        = 0.0000,
-		.geometric_mean_ci95_a = 0.0000,
-		.geometric_mean_ci95_b = 0.0000
+		.geometric_mean        = StatisticsHelper::kNaN,
+		.geometric_mean_ci95_a = StatisticsHelper::kNaN,
+		.geometric_mean_ci95_b = StatisticsHelper::kNaN
 };
 
 static const vector<double> cc1 = {
