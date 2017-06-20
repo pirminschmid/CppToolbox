@@ -9,7 +9,7 @@ Current version April/May 2017.  [Feedback][feedback] welcome.
 Usage
 -----
 
-The TextTemplate class is embedded in folder utils: [link][link]. See detailed documentation there.
+The TextTemplate class and additional helper classes are embedded in folder toolbox of the sample program: [link][link]. See detailed documentation there.
 
 1) Building of the sample program: ```./compile.sh```
 
@@ -21,6 +21,6 @@ License
 
 Copyright (c) 2017 Pirmin Schmid, [MIT license][license].
 
-[link]:src/SimpleTextTemplateDemo/utils/TextTemplate.h
+[link]:https://github.com/pirminschmid/CppToolbox/tree/master/SimpleTextTemplate/src/SimpleTextTemplateDemo/toolbox
 [license]:LICENSE
 [feedback]:mailto:mailbox@pirmin-schmid.ch?subject=TextTemplate

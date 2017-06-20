@@ -10,7 +10,7 @@ Current version April/May 2017.  [Feedback][feedback] welcome.
 Usage
 -----
 
-The FilesSystemHelper class is embedded in folder toolbox of the example program: [link][link]. See detailed documentation there.
+The FilesSystemHelper class is embedded in folder toolbox of the sample program: [link][link]. See detailed documentation there.
 
 1) Building of the sample program: ```./compile.sh```
 

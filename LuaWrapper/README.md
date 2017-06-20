@@ -17,7 +17,7 @@ Dependencies
 Usage
 -----
 
-The wrapper class is embedded in the SampleProject, folder utils: [link][link].
+The wrapper class is embedded in the SampleProject, folder toolbox: [link][link].
 
 1) Installation of Lua source code: ```./install_lua.sh``` (*)
 
@@ -35,6 +35,6 @@ Copyright (c) 2017 Pirmin Schmid, [MIT license][license].
 
 [lua]:https://www.lua.org
 [luajit]:http://luajit.org
-[link]:src/SampleProject/utils
+[link]:https://github.com/pirminschmid/CppToolbox/tree/master/LuaWrapper/src/SampleProject/toolbox
 [license]:LICENSE
 [feedback]:mailto:mailbox@pirmin-schmid.ch?subject=LuaWrapper

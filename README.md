@@ -17,7 +17,7 @@ See the documentation of each class for additional information.
 
 - [StatisticsHelper][statisticshelper]: This class provides some basic descriptive statistics functions.
 
-Current version April/May 2017.  [Feedback][feedback] welcome.
+Current version June 2017.  [Feedback][feedback] welcome.
 
 
 License

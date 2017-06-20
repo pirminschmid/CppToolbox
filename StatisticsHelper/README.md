@@ -9,7 +9,7 @@ Current version June 2017.  [Feedback][feedback] welcome.
 Usage
 -----
 
-The statistics class is embedded in folder utils: [link][link].
+The statistics class is embedded in folder toolbox of the sample program: [link][link].
 
 1) Building of the sample program: ```./compile.sh```
 
@@ -21,6 +21,6 @@ License
 
 Copyright (c) 2017 Pirmin Schmid, [MIT license][license].
 
-[link]:src/StatisticsHelperDemo/utils
+[link]:https://github.com/pirminschmid/CppToolbox/tree/master/StatisticsHelper/src/StatisticsHelperDemo/toolbox
 [license]:LICENSE
 [feedback]:mailto:mailbox@pirmin-schmid.ch?subject=StatisticsHelper
