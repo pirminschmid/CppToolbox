@@ -10,7 +10,7 @@ Current version April/May 2017.  [Feedback][feedback] welcome.
 Usage
 -----
 
-The FilesSystemHelper class is embedded in folder utils: [link][link]. See detailed documentation there.
+The FilesSystemHelper class is embedded in folder toolbox of the example program: [link][link]. See detailed documentation there.
 
 1) Building of the sample program: ```./compile.sh```
 
@@ -22,6 +22,6 @@ License
 
 Copyright (c) 2017 Pirmin Schmid, [MIT license][license].
 
-[link]:src/SampleProgram/utils/FileSystemHelper.h
+[link]:/pirminschmid/CppToolbox/tree/master/FileSystemHelper/src/SampleProgram/toolbox
 [license]:LICENSE
 [feedback]:mailto:mailbox@pirmin-schmid.ch?subject=FileSystemHelper
