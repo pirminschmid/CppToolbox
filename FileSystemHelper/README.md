@@ -22,6 +22,6 @@ License
 
 Copyright (c) 2017 Pirmin Schmid, [MIT license][license].
 
-[link]:/pirminschmid/CppToolbox/tree/master/FileSystemHelper/src/SampleProgram/toolbox
+[link]:https://github.com/pirminschmid/CppToolbox/tree/master/FileSystemHelper/src/SampleProgram/toolbox
 [license]:LICENSE
 [feedback]:mailto:mailbox@pirmin-schmid.ch?subject=FileSystemHelper
