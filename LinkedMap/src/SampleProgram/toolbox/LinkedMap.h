@@ -58,7 +58,7 @@ namespace toolbox {
 	 * Hint: use std::unique_ptr<T> for non-trivial value types T. The map store will
 	 * handle memory management automatically without copying lots of data.
 	 *
-	 * v1.3 2017-04-12 / 2017-05-03 Pirmin Schmid
+	 * v1.4 2017-04-12 / 2017-06-20 Pirmin Schmid
 	 *
 	 * @tparam K key type
 	 * @tparam V value type
@@ -74,6 +74,12 @@ namespace toolbox {
 		typedef int32_t ID_type;  // must be a signed integer type large enough to hold capacity
 
 		typedef std::function<bool(const V &)> predicate_type;
+
+		template<typename M>
+		using map_type = std::function<M(const V &)>;
+
+		template<typename R, typename M>
+		using reduce_type = std::function<R(const R &, const M &)>;
 
 		static constexpr ID_type kMaxCapacity = std::numeric_limits<ID_type>::max();
 
@@ -274,6 +280,25 @@ namespace toolbox {
 			return kNone;
 		}
 
+
+		/**
+		 * Applies a map-reduce algorithm on all elements of the map.
+		 * No particular order is guaranteed. However, it's LRU to MRU at the moment.
+		 */
+		template<typename R, typename M>
+		R mapreduce(const R &start_value, reduce_type<R, M> reduce_function, map_type<M> map_function) const {
+			ID_type max = next_id_; // all, without exclusion of reserved MRU
+			ID_type count = 0;
+			ID_type current = first_;
+			R result = start_value;
+			while (count < max) {
+				M mapped_value = map_function(store_[current]);
+				result = reduce_function(result, mapped_value);
+				current = list_[current].next;
+				++count;
+			}
+			return result;
+		}
 
 		ID_type capacity() const {
 			return capacity_;

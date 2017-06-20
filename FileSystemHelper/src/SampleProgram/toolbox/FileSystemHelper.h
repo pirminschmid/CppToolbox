@@ -52,11 +52,21 @@ namespace toolbox {
 
 		/**
 		 * A simple test for file existence.
+		 * Uses stat().
 		 *
 		 * @param path
 		 * @return true/false
 		 */
 		static bool fileExists(const std::string &path);
+
+
+		/**
+		 * Returns file size as determined by stat().
+		 *
+		 * @param path
+		 * @return file size in bytes, or -1 in case of an error while calling stat().
+		 */
+		static int64_t fileSize(const std::string &path);
 
 
 		/**

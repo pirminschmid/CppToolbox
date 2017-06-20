@@ -100,6 +100,16 @@ namespace toolbox {
 	}
 
 
+	int64_t FileSystemHelper::fileSize(const std::string &path) {
+		struct stat buffer;
+		int ret = stat(path.c_str(), &buffer);
+		if (ret != 0) {
+			return -1;
+		}
+
+		return static_cast<int64_t>(buffer.st_size);
+	}
+
 	void FileSystemHelper::rmFile(const std::string &path) {
 		std::remove(path.c_str());
 	}
