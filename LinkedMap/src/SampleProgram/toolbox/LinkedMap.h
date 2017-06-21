@@ -73,10 +73,10 @@ namespace toolbox {
 	public:
 		typedef int32_t ID_type;  // must be a signed integer type large enough to hold capacity
 
-		typedef std::function<bool(const V &)> predicate_type;
+		using predicate_type = std::function<bool(const V &)>;
 
 		template<typename M>
-		using map_type = std::function<M(const V &)>;
+		using map_type = std::function<M(const V &, ID_type)>;
 
 		template<typename R, typename M>
 		using reduce_type = std::function<R(const R &, const M &)>;
@@ -256,7 +256,7 @@ namespace toolbox {
 			}
 
 			ID_type max = next_id_ - reserved_mru_count;
-			ID_type count = 0;
+			ID_type index = 0;
 			ID_type current = first_;
 
 			if (exclude_lru) {
@@ -265,15 +265,15 @@ namespace toolbox {
 				}
 
 				current = list_[current].next;
-				++count;
+				++index;
 			}
 
-			while (count < max) {
+			while (index < max) {
 				if (predicate(store_[current])) {
 					return current;
 				}
 				current = list_[current].next;
-				++count;
+				++index;
 			}
 
 			// default
@@ -288,14 +288,14 @@ namespace toolbox {
 		template<typename R, typename M>
 		R mapreduce(const R &start_value, reduce_type<R, M> reduce_function, map_type<M> map_function) const {
 			ID_type max = next_id_; // all, without exclusion of reserved MRU
-			ID_type count = 0;
+			ID_type index = 0;
 			ID_type current = first_;
 			R result = start_value;
-			while (count < max) {
-				M mapped_value = map_function(store_[current]);
+			while (index < max) {
+				M mapped_value = map_function(store_[current], index);
 				result = reduce_function(result, mapped_value);
 				current = list_[current].next;
-				++count;
+				++index;
 			}
 			return result;
 		}
