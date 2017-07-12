@@ -22,7 +22,7 @@ using namespace toolbox;
  *
  * and some additional corner case tests.
  *
- * v1.2 2017-06-16 Pirmin Schmid
+ * v1.3 2017-07-12 Pirmin Schmid
  */
 
 
@@ -560,23 +560,21 @@ static constexpr double kRelativeTolerance_narrow = 0.0001;
 // and also only 4 significant digits in reference
 static constexpr double kRelativeTolerance_wide = 0.001;
 
-static void printDouble(const string &title, double value, double reference, double rtol) {
-	string ok_str;
+static bool printDouble(const string &title, double value, double reference, double rtol) {
+	bool ok = false;
 	if (fabs(value - reference) <= fabs(rtol * reference)) {
-		ok_str = "  OK  ";
+		ok = true;
 	} else if (value == StatisticsHelper::kNaN && reference == StatisticsHelper::kNaN) {
-		ok_str = "  OK  ";
+		ok = true;
 	} else if (value == StatisticsHelper::kPosInf && reference == StatisticsHelper::kPosInf) {
-		ok_str = "  OK  ";
+		ok = true;
 	} else if (std::isnan(value) && std::isnan(reference)) {
-		ok_str = "  OK  ";
-	} else {
-		ok_str = " WRONG";
+		ok = true;
 	}
 
 	cout << fixed << setprecision(4)
 		 << "val = " << value << " ref = " << reference
-		 << ok_str
+		 << (ok ? "  OK  " : " WRONG")
 		 << scientific
 		 << "(rtol = " << rtol << ") :: ";
 	// gcc 4.9 does not support defaultfloat; thus this workaround by Martin Bonner on
@@ -584,14 +582,13 @@ static void printDouble(const string &title, double value, double reference, dou
 	cout.unsetf(std::ios_base::floatfield);
 	cout << setprecision(15)
 		 << title << endl;
+	return ok;
 }
 
-static void printInt(const string &title, StatisticsHelper::count_type value, StatisticsHelper::count_type reference) {
-	string ok_str;
+static bool printInt(const string &title, StatisticsHelper::count_type value, StatisticsHelper::count_type reference) {
+	bool ok = false;
 	if (value == reference) {
-		ok_str = "  OK  ";
-	} else {
-		ok_str = " WRONG";
+		ok = true;
 	}
 
 	// gcc 4.9 does not support defaultfloat; thus this workaround by Martin Bonner on
@@ -599,12 +596,13 @@ static void printInt(const string &title, StatisticsHelper::count_type value, St
 	cout.unsetf(std::ios_base::floatfield);
 	cout << setprecision(15)
 		 << "val = " << value << " ref = " << reference
-		 << ok_str
+		 << (ok ? "  OK  " : " WRONG")
 		 << " :: "
 		 << title << endl;
+	return ok;
 }
 
-static void runComparison(const string &title, const vector<double> &values, double denominator, const StatisticsHelper::Summary &ref) {
+static bool runComparison(const string &title, const vector<double> &values, double denominator, const StatisticsHelper::Summary &ref) {
 	cout << endl << "Running test: " << title << endl;
 
 	// the division by denominator is a residual from the original version in benchmarkC
@@ -625,26 +623,27 @@ static void runComparison(const string &title, const vector<double> &values, dou
 
 	// actual comparison
 	cout << endl << "Comparison:" << endl;
-	printInt("count", stat.count, ref.count);
+	bool ok = printInt("count", stat.count, ref.count);
 	cout << "robust" << endl;
-	printDouble("min", stat.min, ref.min, kRelativeTolerance_narrow);
-	printDouble("q1", stat.q1, ref.q1, kRelativeTolerance_narrow);
-	printDouble("median", stat.median, ref.median, kRelativeTolerance_narrow);
-	printDouble("q3", stat.q3, ref.q3, kRelativeTolerance_narrow);
-	printDouble("max", stat.max, ref.max, kRelativeTolerance_narrow);
+	ok &= printDouble("min", stat.min, ref.min, kRelativeTolerance_narrow);
+	ok &= printDouble("q1", stat.q1, ref.q1, kRelativeTolerance_narrow);
+	ok &= printDouble("median", stat.median, ref.median, kRelativeTolerance_narrow);
+	ok &= printDouble("q3", stat.q3, ref.q3, kRelativeTolerance_narrow);
+	ok &= printDouble("max", stat.max, ref.max, kRelativeTolerance_narrow);
 	cout << "parametric" << endl;
-	printDouble("mean", stat.mean, ref.mean, kRelativeTolerance_narrow);
-	printDouble("sd", stat.sd, ref.sd, kRelativeTolerance_narrow);
-	printDouble("sem (wider RTOL)", stat.sem, ref.sem, kRelativeTolerance_wide);
-	printDouble("ci95_a (wider RTOL)", stat.ci95_a, ref.ci95_a, kRelativeTolerance_wide);
-	printDouble("ci95_b (wider RTOL)", stat.ci95_b, ref.ci95_b, kRelativeTolerance_wide);
+	ok &= printDouble("mean", stat.mean, ref.mean, kRelativeTolerance_narrow);
+	ok &= printDouble("sd", stat.sd, ref.sd, kRelativeTolerance_narrow);
+	ok &= printDouble("sem (wider RTOL)", stat.sem, ref.sem, kRelativeTolerance_wide);
+	ok &= printDouble("ci95_a (wider RTOL)", stat.ci95_a, ref.ci95_a, kRelativeTolerance_wide);
+	ok &= printDouble("ci95_b (wider RTOL)", stat.ci95_b, ref.ci95_b, kRelativeTolerance_wide);
 	cout << "additional means" << endl;
-	printDouble("harmonic mean", stat.harmonic_mean, ref.harmonic_mean, kRelativeTolerance_narrow);
-	printDouble("harmonic mean ci95_a (wider RTOL)", stat.harmonic_mean_ci95_a, ref.harmonic_mean_ci95_a, kRelativeTolerance_wide);
-	printDouble("harmonic mean ci95_b (wider RTOL)", stat.harmonic_mean_ci95_b, ref.harmonic_mean_ci95_b, kRelativeTolerance_wide);
-	printDouble("geometric mean", stat.geometric_mean, ref.geometric_mean, kRelativeTolerance_narrow);
-	printDouble("geometric mean ci95_a (wider RTOL)", stat.geometric_mean_ci95_a, ref.geometric_mean_ci95_a, kRelativeTolerance_wide);
-	printDouble("geometric mean ci95_b (wider RTOL)", stat.geometric_mean_ci95_b, ref.geometric_mean_ci95_b, kRelativeTolerance_wide);
+	ok &= printDouble("harmonic mean", stat.harmonic_mean, ref.harmonic_mean, kRelativeTolerance_narrow);
+	ok &= printDouble("harmonic mean ci95_a (wider RTOL)", stat.harmonic_mean_ci95_a, ref.harmonic_mean_ci95_a, kRelativeTolerance_wide);
+	ok &= printDouble("harmonic mean ci95_b (wider RTOL)", stat.harmonic_mean_ci95_b, ref.harmonic_mean_ci95_b, kRelativeTolerance_wide);
+	ok &= printDouble("geometric mean", stat.geometric_mean, ref.geometric_mean, kRelativeTolerance_narrow);
+	ok &= printDouble("geometric mean ci95_a (wider RTOL)", stat.geometric_mean_ci95_a, ref.geometric_mean_ci95_a, kRelativeTolerance_wide);
+	ok &= printDouble("geometric mean ci95_b (wider RTOL)", stat.geometric_mean_ci95_b, ref.geometric_mean_ci95_b, kRelativeTolerance_wide);
+	return ok;
 }
 
 //--- main ---------------------------------------------------------------------
@@ -654,19 +653,25 @@ int main() {
 	cout << "and also testing some additional corner cases" << endl;
 
 	// data from validation test with MedCalc
-	runComparison("Test 1.", data1, denominator1, reference1);
-	runComparison("Test 2. wider SD, fewer values.", data2, denominator2, reference2);
-	runComparison("Test 3. corner case n=4.", data3, denominator3, reference3);
+	bool ok = runComparison("Test 1.", data1, denominator1, reference1);
+	ok &= runComparison("Test 2. wider SD, fewer values.", data2, denominator2, reference2);
+	ok &= runComparison("Test 3. corner case n=4.", data3, denominator3, reference3);
 
 	// additional corner cases
-	runComparison("Corner case 0. n=0.", cc0, denominator_cc0, ref_cc0);
-	runComparison("Corner case 1. n=1.", cc1, denominator_cc1, ref_cc1);
-	runComparison("Corner case 2. n=2.", cc2, denominator_cc2, ref_cc2);
-	runComparison("Corner case 3. n=3.", cc3, denominator_cc3, ref_cc3);
+	ok &= runComparison("Corner case 0. n=0.", cc0, denominator_cc0, ref_cc0);
+	ok &= runComparison("Corner case 1. n=1.", cc1, denominator_cc1, ref_cc1);
+	ok &= runComparison("Corner case 2. n=2.", cc2, denominator_cc2, ref_cc2);
+	ok &= runComparison("Corner case 3. n=3.", cc3, denominator_cc3, ref_cc3);
 
 	// corner cases with harmonic and geometric means
-	runComparison("Corner case 4. harmonic and geometric means with a value <= 0 in data set", cc4, denominator_cc4, ref_cc4);
-	runComparison("Corner case 5. control case (all ok)", cc5, denominator_cc5, ref_cc5);
+	ok &= runComparison("Corner case 4. harmonic and geometric means with a value <= 0 in data set", cc4, denominator_cc4, ref_cc4);
+	ok &= runComparison("Corner case 5. control case (all ok)", cc5, denominator_cc5, ref_cc5);
 
-	return 0;
+	if (ok) {
+		cout << endl << "ALL TESTS OK." << endl;
+		return 0;
+	} else {
+		cout << endl << "AT LEAST ONE ERROR IN TESTS." << endl;
+		return 1;
+	}
 }
