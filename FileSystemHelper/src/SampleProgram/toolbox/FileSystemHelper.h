@@ -61,6 +61,16 @@ namespace toolbox {
 
 
 		/**
+ 		 * A simple test for folder existence.
+ 		 * Uses stat().
+ 		 *
+ 		 * @param path
+ 		 * @return true/false
+ 		 */
+		static bool folderExists(const std::string &path);
+
+
+		/**
 		 * Returns file size as determined by stat().
 		 *
 		 * @param path

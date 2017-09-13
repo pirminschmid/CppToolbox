@@ -100,6 +100,21 @@ namespace toolbox {
 	}
 
 
+	bool FileSystemHelper::folderExists(const std::string &path) {
+		struct stat buffer;
+		int ret = stat(path.c_str(), &buffer);
+		if (ret != 0) {
+			return false;
+		}
+
+		if (S_ISDIR(buffer.st_mode)) {
+			return true;
+		}
+
+		return false;
+	}
+
+
 	int64_t FileSystemHelper::fileSize(const std::string &path) {
 		struct stat buffer;
 		int ret = stat(path.c_str(), &buffer);
