@@ -14,7 +14,9 @@
 #include <unistd.h>
 
 #include <cstdio>
+#include <cstring>
 #include <vector>
+#include <iostream>
 
 
 namespace toolbox {
@@ -131,9 +133,9 @@ namespace toolbox {
 
 	std::string FileSystemHelper::getBasename(const std::string &path) {
 		// note basename may modify the string -> create a copy first
-		std::string p(path);
-		// and remove const modifier
-		char *b = basename( (char *)p.c_str() );
+		char buffer[path.length() + 2];
+		strcpy(buffer, path.c_str());
+		char *b = basename(buffer);
 		if (b == nullptr) {
 			return std::string("");
 		}
@@ -141,10 +143,10 @@ namespace toolbox {
 	}
 
 	std::string FileSystemHelper::getDirname(const std::string &path) {
-		// note basename may modify the string -> create a copy first
-		std::string p(path);
-		// and remove const modifier
-		char *b = dirname( (char *)p.c_str() );
+		// note dirname may modify the string -> create a copy first
+		char buffer[path.length() + 2];
+		strcpy(buffer, path.c_str());
+		char *b = dirname(buffer);
 		if (b == nullptr) {
 			return std::string("");
 		}

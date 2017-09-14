@@ -32,5 +32,18 @@ int main(int argc, char *argv[]) {
 
 	FileSystemHelper::readDir(argv[1], print, true);
 
+
+	cout << endl << "Check getDirname() to keep input string constant:" << endl;
+	std::string path = "/path/to/file.txt";
+	cout << "- before: " << path << endl;
+	cout << "- path:   " << FileSystemHelper::getDirname(path) << endl;
+	cout << "- after:  " << path << endl;
+
+	cout << endl << "Basename of 'file.txt': '" << FileSystemHelper::getBasename("file.txt") << "'" << endl;
+	cout << "Path (dirname) of 'file.txt': '" << FileSystemHelper::getDirname("file.txt") << "'" << endl;
+
+	cout << endl << "Basename of empty string: '" << FileSystemHelper::getBasename("") << "'" << endl;
+	cout << "Path (dirname) of empty string: '" << FileSystemHelper::getDirname("") << "'" << endl;
+
 	return 0;
 }
