@@ -58,7 +58,7 @@ namespace toolbox {
 	 * Hint: use std::unique_ptr<T> for non-trivial value types T. The map store will
 	 * handle memory management automatically without copying lots of data.
 	 *
-	 * v1.4 2017-04-12 / 2017-06-20 Pirmin Schmid
+	 * v1.5 2017-04-12 / 2017-09-21 Pirmin Schmid
 	 *
 	 * @tparam K key type
 	 * @tparam V value type
@@ -88,6 +88,7 @@ namespace toolbox {
 		LinkedMap(const ID_type capacity, bool debug_mode = false): capacity_(capacity), debug_mode_(debug_mode) {
 			store_.reserve(capacity);
 			list_.reserve(capacity);
+			free_list_.reserve(capacity);
 
 #ifdef LM_DEBUG_MODE_ALLOWED
 			if (debug_mode_) {
@@ -106,6 +107,7 @@ namespace toolbox {
 			store_.clear();
 			list_.clear();
 			map_.clear();
+			free_list_.clear();
 
 			next_id_ = 0;
 			first_ = kNone;
@@ -120,21 +122,32 @@ namespace toolbox {
 				return;
 			}
 
-			ID_type id = next_id_++;
-			store_.push_back(std::move(value));
-			ListInfo info = {key, kNone, kNone};
-			list_.push_back(info);
-			addAsMru(id);
-			map_[key] = id;
+			ID_type id = 0;
+			if (0 < free_list_.size()) {
+				id = free_list_.back();
+				free_list_.pop_back();
+				store_[id] = std::move(value);
+				list_[id].key = key;
+				addAsMru(id);
+				map_[key] = id;
 
-			if (capacity_ < next_id_) {
-				capacity_ = next_id_;
+			} else {
+				id = next_id_++;
+				store_.push_back(std::move(value));
+				ListInfo info = {key, kNone, kNone};
+				list_.push_back(info);
+				addAsMru(id);
+				map_[key] = id;
+
+				if (capacity_ < next_id_) {
+					capacity_ = next_id_;
+				}
 			}
 
 #ifdef LM_DEBUG_MODE_ALLOWED
 			if (debug_mode_) {
 				std::cout << "LinkedMap: add key " << key << " @ ID " << id
-						  << ", size " << next_id_
+						  << ", size " << size()
 						  << ", capacity " << capacity_
 						  << std::endl;
 			}
@@ -149,7 +162,7 @@ namespace toolbox {
 				return;
 			}
 			if (next_id_ <= id) {
-				std::cerr << "ERROR in LinkedMap::replace(): id must be < map size " << next_id_ << std::endl;
+				std::cerr << "ERROR in LinkedMap::replace(): id must be < next_id " << next_id_ << std::endl;
 				return;
 			}
 #endif
@@ -193,7 +206,7 @@ namespace toolbox {
 				return;
 			}
 			if (next_id_ <= id) {
-				std::cerr << "ERROR in LinkedMap::refreshWithId(): id must be < map size " << next_id_ << std::endl;
+				std::cerr << "ERROR in LinkedMap::refreshWithId(): id must be < next_id " << next_id_ << std::endl;
 				return;
 			}
 #endif
@@ -216,7 +229,7 @@ namespace toolbox {
 				return nullptr;
 			}
 			if (next_id_ <= id) {
-				std::cerr << "ERROR in LinkedMap::get(): id must be < map size " << next_id_ << std::endl;
+				std::cerr << "ERROR in LinkedMap::get(): id must be < next_id " << next_id_ << std::endl;
 				return nullptr;
 			}
 #endif
@@ -255,7 +268,7 @@ namespace toolbox {
 				reserved_mru_count = 0;
 			}
 
-			ID_type max = next_id_ - reserved_mru_count;
+			ID_type max = size() - reserved_mru_count;
 			ID_type index = 0;
 			ID_type current = first_;
 
@@ -287,7 +300,7 @@ namespace toolbox {
 		 */
 		template<typename R, typename M>
 		R mapreduce(const R &start_value, reduce_type<R, M> reduce_function, map_type<M> map_function) const {
-			ID_type max = next_id_; // all, without exclusion of reserved MRU
+			ID_type max = size(); // all, without exclusion of reserved MRU
 			ID_type index = 0;
 			ID_type current = first_;
 			R result = start_value;
@@ -300,12 +313,59 @@ namespace toolbox {
 			return result;
 		}
 
+
+		void erase(ID_type id) {
+#ifdef LM_APPLY_CHECKS
+			if (size() <= 0) {
+				std::cerr << "ERROR in LinkedMap::erase(): error in client. uses erase() on empty LinkedMap" << std::endl;
+				return;
+			}
+
+			if (id < 0) {
+				std::cerr << "ERROR in LinkedMap::erase(): id must be >= 0" << std::endl;
+				return;
+			}
+
+			if (next_id_ <= id) {
+				std::cerr << "ERROR in LinkedMap::erase(): id must be < next_id " << next_id_ << std::endl;
+				return;
+			}
+
+			// avoid double frees/erases
+			for (const ID_type free : free_list_) {
+				if (id == free) {
+					std::cerr << "ERROR in LinkedMap::erase(): id found in free_list (double free operation) " << next_id_ << std::endl;
+					return;
+				}
+			}
+#endif
+
+			// use corner case size() == 1 to clear all lists
+			if (size() == 1) {
+#ifdef LM_APPLY_CHECKS
+				if (id != first_ || id != last_) {
+					std::cerr << "ERROR in LinkedMap::erase(): error in client code during erasing. For n=1 id==first==last must hold. "
+							  << std::endl;
+					return;
+				}
+#endif
+
+				clear();
+				return;
+			}
+
+			map_.erase(list_[id].key);
+			removeFromList(id);
+			free_list_.push_back(id);
+		}
+
+
 		ID_type capacity() const {
 			return capacity_;
 		}
 
 		ID_type size() const {
-			return next_id_;
+			return next_id_ - free_list_.size();
 		}
 
 		ID_type getLruId() const {
@@ -317,7 +377,7 @@ namespace toolbox {
 		}
 
 		void printList(std::ostream *out) const {
-			ID_type max = next_id_; // all, without exclusion of reserved MRU
+			ID_type max = size(); // all, without exclusion of reserved MRU
 			ID_type count = 0;
 			ID_type current = first_;
 			*out << std::endl << "LinkedMap, size " << max << ", LRU ID: " << getLruId() << ", MRU ID: " << getMruId() << std::endl;
@@ -347,11 +407,29 @@ namespace toolbox {
 		std::vector<ListInfo> list_;         // id -> associated list info
 		std::unordered_map<K, ID_type> map_; // key -> id
 
+		std::vector<ID_type> free_list_;	 // keeps free positions after erasing of elements
+		// note: push_back, pop_back, and lookups are applied on this list.
+		// Also a std::unordered_set<> may be used (speedup for lookups from O(n) to O(1)
+		// with n = size of this vector that may be in range of complete cache size N
+		// only in some cases and typically n << N may hold).
+		// However, lookup is only done as a check in add() if LM_APPLY_CHECKS is set
+		// and thus not when max. performance is needed. On the other hand, adding and removing
+		// of elements to/from hashmap (both also used if max performance is desired,
+		// i.e. LM_APPLY_CHECKS off) is more expensive (despite being O(1), too) than
+		// adding/removing the last element of a vector.
+		// Thus: std::vector<> is used at the moment instead of std::unordered_set<>
+		// This may be adjusted if there are other requirements.
+
 		bool debug_mode_;
 
 		// internal list handling
 		inline void moveToMru(ID_type id)  {
 			// move to end of list -> becomes MRU
+			removeFromList(id);
+			addAsMru(id);
+		}
+
+		inline void removeFromList(ID_type id) {
 			ID_type prev = list_[id].prev;
 			ID_type next = list_[id].next;
 
@@ -366,8 +444,6 @@ namespace toolbox {
 			} else {
 				last_ = prev;
 			}
-
-			addAsMru(id);
 		}
 
 		inline void addAsMru(ID_type id) {

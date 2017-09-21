@@ -81,5 +81,28 @@ int main(int argc, char *argv[]) {
 	cout << "refresh the MRU (should stay the same)";
 	lm.refreshWithId(lm.getMruId());
 	lm.printList(&cout);
+
+	cout << endl;
+	cout << "delete the MRU (size should be reduced by 1 and MRU changed)";
+	lm.erase(lm.getMruId());
+	lm.printList(&cout);
+
+	cout << endl;
+	cout << "delete all elements except one (using LRU elements): size should be 1";
+	lm_type::ID_type id = lm.getLruId();
+	while (id != lm_type::kNone && 1 < lm.size()) {
+		lm.erase(id);
+		id = lm.getLruId();
+	}
+	lm.printList(&cout);
+
+	cout << endl;
+	cout << "delete last element (using LRU element): size should be 0, MRU and LRU ids should be -1; note: internally the lists are cleared.";
+	id = lm.getLruId();
+	while (id != lm_type::kNone && 0 < lm.size()) {
+		lm.erase(id);
+		id = lm.getLruId();
+	}
+	lm.printList(&cout);
 	return 0;
 }
