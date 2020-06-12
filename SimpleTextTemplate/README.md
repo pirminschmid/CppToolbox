@@ -21,6 +21,6 @@ License
 
 Copyright (c) 2017 Pirmin Schmid, [MIT license][license].
 
-[link]:https://github.com/pirminschmid/CppToolbox/tree/master/SimpleTextTemplate/src/SimpleTextTemplateDemo/toolbox
+[link]:https://github.com/pirminschmid/CppToolbox/tree/main/SimpleTextTemplate/src/SimpleTextTemplateDemo/toolbox
 [license]:LICENSE
 [feedback]:mailto:mailbox@pirmin-schmid.ch?subject=TextTemplate

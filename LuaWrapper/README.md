@@ -9,7 +9,7 @@ Current version v1.0 (2017-05-01).  [Feedback][feedback] welcome.
 Dependencies
 ------------
 
-- Needs ```readline``` and ```readline-devel``` packages installed on Linux 
+- Needs ```readline``` and ```readline-devel``` packages installed on Linux
 
 - Lua is installed automatically with the ```./install_lua.sh``` script
 
@@ -35,6 +35,6 @@ Copyright (c) 2017 Pirmin Schmid, [MIT license][license].
 
 [lua]:https://www.lua.org
 [luajit]:http://luajit.org
-[link]:https://github.com/pirminschmid/CppToolbox/tree/master/LuaWrapper/src/SampleProject/toolbox
+[link]:https://github.com/pirminschmid/CppToolbox/tree/main/LuaWrapper/src/SampleProject/toolbox
 [license]:LICENSE
 [feedback]:mailto:mailbox@pirmin-schmid.ch?subject=LuaWrapper

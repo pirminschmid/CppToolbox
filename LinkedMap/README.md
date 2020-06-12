@@ -21,6 +21,6 @@ License
 
 Copyright (c) 2017 Pirmin Schmid, [MIT license][license].
 
-[link]:https://github.com/pirminschmid/CppToolbox/tree/master/LinkedMap/src/SampleProgram/toolbox
+[link]:https://github.com/pirminschmid/CppToolbox/tree/main/LinkedMap/src/SampleProgram/toolbox
 [license]:LICENSE
 [feedback]:mailto:mailbox@pirmin-schmid.ch?subject=LinkedMap
